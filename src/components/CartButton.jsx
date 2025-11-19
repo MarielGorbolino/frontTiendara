@@ -6,7 +6,7 @@ function CartButton ({isLogin}){
     const {getTotalItems,cart} = useCart();
     console.log(cart)
     if(isLogin){
-        return(<Link to={"/cart"} className="relative text-gray-300 hover:text-emerald-400">
+        return(<Link to={"/cart"} className="relative text-gray-300 hover:text-blue-400">
             <ShoppingCart size={18} className="inline-block mr-1"/>
             <span>Cart</span>
             {

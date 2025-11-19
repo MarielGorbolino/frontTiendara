@@ -11,14 +11,24 @@ function Category() {
 
   async function pedirProductosPorCategoria() {
     if (category) {
-      const res = await fetch("http://localhost:3002/api/category/"+category)
+      console.log("Categoria:", category);
+      const urlbase = import.meta.env.VITE_URL_BACK;
+      const res = await fetch(`${urlbase}/api/products/category/${category}`);
       const data = await res.json();
-      setProducts(data);
+      console.log("dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:", `${urlbase}/api/products/category/${category}`);
+
+      setProducts(data.data);
     }
   }
-  
+
   return (
-    <div>{products.length > 0 && <ProductList products={products} />}</div>
+    <div>
+      <div>{products.length > 0 && <ProductList products={products} />}</div>
+
+      <div className="flex items-center justify-center min-h-screen">
+        {products.length == 0 && <p>No hay productos en esta categoría.</p>}
+      </div>
+    </div>
   );
 }
 

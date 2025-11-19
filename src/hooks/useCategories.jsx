@@ -1,30 +1,28 @@
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react";
+import { useApi } from "./useApi";
 
-function useCategories(){
-    const [categories,setcategories] =useState([])
-    const [isLoading, setIsLoading] = useState(true)
-    const [error,setError] = useState(null)
+function useCategories() {
+	const [categories, setcategories] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const urlapi = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+	const { request } = useApi();
 
-    async function fetchProducts() {
-        try{
-            const response = await fetch("http://localhost:3002/api/category")
-            if(!response.ok){
-                throw new Error("Error en la peticion")
-            }
-            const responseJson = await response.json()
-            setcategories(responseJson.data)
-        }catch (error){
-            setError(error.message)
-            console.log(error)
-        }finally{
-            setIsLoading(false)
-        }
-    }
-    useEffect(()=>{
-        fetchProducts()
-    },[])
+	useEffect(() => {
+		async function fetchCategories() {
+			try {
+				const response = await request(urlapi + `/api/category`)
+				setcategories(response.data);
+			} catch (error) {
+				setError(error.message);
+				console.log(error);
+			} finally {
+				setIsLoading(false);
+			}
+		}
+		fetchCategories();
+	}, []);
 
-    return {categories,isLoading,error}
+	return { categories, isLoading, error };
 }
-
-export default useCategories
+export default useCategories;

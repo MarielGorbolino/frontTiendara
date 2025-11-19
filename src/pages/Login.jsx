@@ -2,29 +2,36 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import { User, Mail } from "lucide-react";
-function Login({ login, loginAsAdmin }) {
+import { useAuth } from "../hooks/useAuth";
+import { toast } from "react-toastify";
+
+function Login() {
   const [formData, setFormData] = useState({
     email: "", //admin@admin.com
     contrasenia: "", //admin
   });
 
+  const {login}= useAuth()
+
   const navigate = useNavigate()
 
-  function loginUser(e) {
+  async function loginUser(e) {
     e.preventDefault();
-    //fetch al back (user) user.rol
-    if (
-      formData.email == "admin@admin.com" &&
-      formData.contrasenia == "admin"
-    ) {
-      loginAsAdmin();
-      navigate("/dashboard")
+
+    const result = await login(formData.email, formData.contrasenia);
+
+    if (result.success) {
+      toast.success("Inicio de sesión exitoso");
+      
+      // Verificar si es admin
+      if (result.data.user?.role === 'admin' || result.data.user?.isAdmin === true) {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     } else {
-      login();
-      navigate("/")
+      toast.error(result.error || "Error al iniciar sesión");
     }
-    console.log(formData);
-    //fetch al back para validar los datos del usuario
   }
 
   function navigateToHome() {
@@ -35,7 +42,7 @@ function Login({ login, loginAsAdmin }) {
     <div className="flex flex-col justify-center bg-gray-700 min-h-screen items-center pt-12">
       <div className="bg-gray-900 rounded-2xl max-w-2xl w-full mx-4">
         <div className="flex justify-center py-4">
-          <h1 className="text-2xl font-bold text-emerald-400">Login</h1>
+          <h1 className="text-2xl font-bold text-blue-400">Login</h1>
         </div>
         <form
           onSubmit={loginUser}
