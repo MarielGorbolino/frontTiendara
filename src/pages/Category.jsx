@@ -1,33 +1,40 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductoList";
+
 function Category() {
   const { category } = useParams();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     pedirProductosPorCategoria();
   }, [category]);
 
   async function pedirProductosPorCategoria() {
+    setLoading(true);
     if (category) {
-      console.log("Categoria:", category);
       const urlbase = import.meta.env.VITE_URL_BACK;
       const res = await fetch(`${urlbase}/api/products/category/${category}`);
       const data = await res.json();
-      console.log("dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:", `${urlbase}/api/products/category/${category}`);
-
-      setProducts(data.data);
+      setProducts(data.data || []);
+      setShowMessage(!data.data || data.data.length === 0);
     }
+    setLoading(false);
   }
 
   return (
-    <div>
-      <div>{products.length > 0 && <ProductList products={products} />}</div>
-
-      <div className="flex items-center justify-center min-h-screen">
-        {products.length == 0 && <p>No hay productos en esta categoría.</p>}
-      </div>
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
+      {loading ? (
+        <p>Cargando...</p>
+      ) : products.length > 0 ? (
+        <ProductList products={products} />
+      ) : showMessage ? (
+        <div className="bg-yellow-200 border border-yellow-400 text-yellow-800 px-6 py-4 rounded shadow text-center">
+          No hay productos en esta categoría.
+        </div>
+      ) : null}
     </div>
   );
 }

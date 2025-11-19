@@ -12,7 +12,7 @@ function FormProducto() {
 	const [formData, setFormData] = useState({
 		title: "",
 		description: "",
-		image: "",
+		images: [],
 		price: "",
 		category: "",
 		id: "",
@@ -24,26 +24,40 @@ function FormProducto() {
 	function navigateToHome() {
 		navigate(-1);
 	}
-
 	async function handleImageChange(e) {
-		const file = e.target.files?.[0];
-		if (!file) return;
+		const files = Array.from(e.target.files);
+		if (!files.length) return;
 
-		const maxSizeMB = 1; // tamaño máximo permitido (1 MB)
+		const maxSizeMB = 1;
 		const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-		if (file.size > maxSizeBytes) {
-			alert(`La imagen supera el tamaño máximo de ${maxSizeMB} MB`);
-			return;
+		const base64Images = [];
+
+		for (const file of files) {
+			if (file.size > maxSizeBytes) {
+				alert(`La imagen ${file.name} supera el tamaño máximo de ${maxSizeMB} MB`);
+				continue;
+			}
+
+			const base64 = await fileToBase64(file);
+			base64Images.push(base64);
 		}
-		const reader = new FileReader();
-		reader.onload = () => {
-			const base64 = reader.result;
-			setFormData({ ...formData, image: base64 });
-		};
-		reader.readAsDataURL(file);
+
+		setFormData((prev) => ({
+    ...prev,
+    images: [...prev.images, ...base64Images],
+  }));
 
 	}
+
+	function fileToBase64(file) {
+		return new Promise((resolve) => {
+			const reader = new FileReader();
+			reader.onload = () => resolve(reader.result);
+			reader.readAsDataURL(file);
+		});
+	}
+
 
 	async function requestCreateProduct(newProduct, token) {
 		const apiBaseUrl =
@@ -73,7 +87,7 @@ function FormProducto() {
 			price: parseFloat(formData.price),
 			category: formData.category,
 			stock: parseInt(formData.stock) || 0,
-			image: formData.image,
+			images: formData.images,
 		};
 
 		try {
@@ -114,7 +128,7 @@ function FormProducto() {
 			setFormData({
 				title: "",
 				description: "",
-				image: "",
+				images: [],
 				price: "",
 				category: "",
 				id: "",
@@ -175,10 +189,18 @@ function FormProducto() {
 				icon={<ImageUp size={18} />}
 				labelText={"Image"}
 				inputType={"file"}
-				value={formData.image}
+				value={formData.images}
 				isRequired={false}
 				onChangeFn={handleImageChange}
+				multiple
 			/>
+			{formData.images.length > 0 && (
+				<div className="flex gap-3 mt-3">
+					{formData.images.map((img, i) => (
+						<img key={i} src={img} alt="" className="w-24 h-24 object-cover rounded" />
+					))}
+				</div>
+			)}
 
 			<select
 				name="category"

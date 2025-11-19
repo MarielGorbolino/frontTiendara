@@ -17,7 +17,7 @@ function ProductCard({ product }) {
     <div className="bg-gray-900 rounded-lg p-4">
       <Link to={"/product/" + (product._id || product.id)}>
         <h2 className="text-blue-400 font-bold text-lg">{product.title}</h2>
-        <img className="text-gray-300" src={product.image} alt={product.title} />
+        <img className="text-gray-300" src={product.images[0]} alt={product.title} />
         <p className="text-gray-300 text-justify py-2">{product.description}</p>
         <p>{product.price}</p>
         <div>
