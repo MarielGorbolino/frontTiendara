@@ -26,7 +26,6 @@ const Checkout = () => {
   });
 
   const handleShippingChange = (e) => {
-    console.log(shippingInfo)
     setShippingInfo({
       ...shippingInfo,
       [e.target.name]: e.target.value

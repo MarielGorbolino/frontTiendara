@@ -45,12 +45,16 @@ export default function AuthProvider({ children }) {
         },
         body: JSON.stringify({ email, password }),
       });
+
+      if (response.status === 401) {
+        throw new Error("Usuario o contraseña incorrectos");
+      }
+
       if (!response.ok) {
         throw new Error("error en el login");
       }
 
       const responseData = await response.json();
-      console.log(responseData);
 
       const accessToken = responseData.data.accesstoken;
       const refreshToken = responseData.data.refreshtoken;
@@ -69,7 +73,6 @@ export default function AuthProvider({ children }) {
 
       return { success: true, data: { accessToken, refreshToken, user: userData } };
     } catch (error) {
-      console.log("error en el login: ", error);
       return { success: false, error: error.message };
     }
   };
@@ -87,7 +90,6 @@ export default function AuthProvider({ children }) {
 
   const refreshAccessToken = async () => {
     try {
-      console.log("llego a la funcion",refreshToken,accessToken)
       if (!refreshToken) {
         throw new Error("no hay refresh token disponble");
       }
@@ -122,8 +124,6 @@ export default function AuthProvider({ children }) {
       localStorage.setItem("accessToken", newAccessToken);
       localStorage.setItem("refreshToken", newRefreshToken);
       localStorage.setItem("user", JSON.stringify(userData));
-
-      console.log("llego al final de la funcion",newRefreshToken,newAccessToken)
 
       return { accessToken: newAccessToken, refreshToken: newRefreshToken, user: userData };
     } catch (error) {

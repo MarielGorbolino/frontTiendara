@@ -3,8 +3,7 @@ import { Link } from "react-router-dom"
 import useCart from "../hooks/useCart"
 
 function CartButton ({isLogin}){
-    const {getTotalItems,cart} = useCart();
-    console.log(cart)
+    const {getTotalItems} = useCart();
     if(isLogin){
         return(<Link to={"/cart"} className="relative text-gray-300 hover:text-blue-400">
             <ShoppingCart size={18} className="inline-block mr-1"/>

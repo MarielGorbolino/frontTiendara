@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
 
@@ -25,7 +26,11 @@ export function useApi() {
           return request(url, method, body, retry + 1);
         }
 
-        toast.error("Sesión expirada");
+        Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Sesión expirada",
+              });
         return null;
       }
 

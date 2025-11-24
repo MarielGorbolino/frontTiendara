@@ -1,20 +1,24 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { CartContext } from "../hooks/CartContext";
+import { useAuth } from "../hooks/useAuth";
+
+const PRODUCT_PRICE = 15000
+const PORCENTAJE = 0.25
 
 function ProductDetail() {
   const { id } = useParams();
   const location = useLocation();
 
-  // 👉 Acá tomás addProductToCart del contexto
-  const { addProductToCart } = useContext(CartContext);
+  const { updateProductCart } = useContext(CartContext);
+  const { user } = useAuth()
 
   const [product, setProduct] = useState(location.state?.product || null);
   const [mainImage, setMainImage] = useState(
-    product?.images?.[0] || ""
+    product?.images?.[0] || []
   );
 
-    useEffect(() => {
+  useEffect(() => {
     if (!product) {
       fetchProduct();
     }
@@ -33,9 +37,6 @@ function ProductDetail() {
     const data = await res.json();
     setProduct(data.data);
   }
-
-  if (!product) return <div className="text-white p-4">Cargando...</div>;
-
 
   if (!product) return <div className="text-white p-4">Cargando...</div>;
 
@@ -70,20 +71,32 @@ function ProductDetail() {
             <span className="text-green-300 font-semibold">${Math.ceil((product.price / 6) * 100) / 100}</span>
           </p>
           <p className="mb-4">
-            Envío GRATIS a AMBA
+            {`${product.price > PRODUCT_PRICE ? "Envio GRATIS": `Costo del envio: $${product.price * PORCENTAJE}`} a AMBA`}
           </p>
           <p className="text-gray-300 mb-2">
             Stock: {product.stock > 0 ? product.stock : "Agotado"}
           </p>
           <p className="mb-4">
-            <span className="text-gray-300">Retiro GRATIS en sucursal</span>{" "}
-            <span className="text-green-300 font-semibold">¡Retiralo YA!</span>
+            <span className="text-gray-300">  
+              {user?.id && product.stock > 0 ? "Retiro GRATIS en sucursal" : ""}
+            </span>{" "}
+            <span className="text-green-300 font-semibold">
+              {user?.id && product.stock > 0 ? "¡Retiralo YA!" : ""}
+            </span>
           </p>
-          <button className="bg-emerald-700 hover:bg-emerald-600 px-4 py-2 rounded" onClick={() => {
-            addProductToCart(product);
-          }}>
+          <button
+            onClick={async () => {
+              await updateProductCart(product._id);
+              await fetchProduct(); // 🔥 vuelve a pedir el producto actualizado
+            }}
+            disabled={!user?.id || product.stock === 0}
+            className={`px-4 py-2 rounded ${user?.id
+              ? "bg-emerald-700 hover:bg-emerald-600"
+              : "bg-gray-500 cursor-not-allowed"}`}
+          >
             Agregar al carrito
           </button>
+
         </div>
       </div>
       {product.images && product.images.length > 1 && (

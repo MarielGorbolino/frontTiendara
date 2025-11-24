@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import { User, Mail } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -11,9 +11,9 @@ function Login() {
     contrasenia: "", //admin
   });
 
-  const {login}= useAuth()
+  const { login } = useAuth();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   async function loginUser(e) {
     e.preventDefault();
@@ -21,16 +21,20 @@ function Login() {
     const result = await login(formData.email, formData.contrasenia);
 
     if (result.success) {
-      toast.success("Inicio de sesión exitoso");
-      
-      // Verificar si es admin
-      if (result.data.user?.role === 'admin' || result.data.user?.isAdmin === true) {
+      if (
+        result.data.user?.role === "admin" ||
+        result.data.user?.isAdmin === true
+      ) {
         navigate("/dashboard");
       } else {
         navigate("/");
       }
     } else {
-      toast.error(result.error || "Error al iniciar sesión");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: result.error,
+      });
     }
   }
 

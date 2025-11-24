@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Checkout from "./pages/Checkout";
 import ProductDetail from "./pages/ProductDetail";
+import Products from "./pages/Products";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/category" element={<Categorys />} />
             <Route path="/category/:category" element={<Category />} />
+            <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/*" element={<h1>404</h1>} />
             {/*rutas para el admin*/}

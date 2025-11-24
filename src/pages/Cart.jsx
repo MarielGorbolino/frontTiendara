@@ -8,9 +8,7 @@ function Cart() {
   const { cart,crearIntentoPago } = useCart();
 
   useEffect(()=>{
- 
       crearIntentoPago()
-
   },[])
 
   if (!cart || !cart.detalle || cart.detalle.length === 0) {

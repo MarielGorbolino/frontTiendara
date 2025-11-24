@@ -37,14 +37,12 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
     setLoading(true);
 
     try {
-      console.log(paymentIntent);
       /*if (!paymentIntent || !paymentIntent.clientSecret) {
         console.log("intento de pago error");
         throw new Error("No se encontró un PaymentIntent válido. Intente recargar la página.");
       }*/
 
       const clientSecret = paymentIntent.clientSecret;
-      console.log('Usando PaymentIntent existente:', clientSecret ? 'Presente' : 'Ausente');
 
       const { error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -58,7 +56,6 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
 
       if (error) {
         toast.error(`Error en el pago: ${error.message}`);
-        console.log(error.message);
         navigate("/errorPay");
       } else {
         toast.success("¡Pago realizado exitosamente!");
@@ -67,8 +64,7 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
         clearCart()
       }
     } catch (error) {
-      toast.error("Error al procesar el pago");
-      console.log(error);
+      toast.error("Error al procesar el pago", error.message);
       navigate("/errorPago");
     } finally {
       setLoading(false);

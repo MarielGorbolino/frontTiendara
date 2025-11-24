@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FormInput from "../components/FormInput";
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Calendar } from "lucide-react";
+import { User, Mail, Calendar, TreePalm } from "lucide-react";
 import { toast } from "react-toastify";
 import { useRegister } from "../hooks/useRegister";
 
@@ -23,9 +23,6 @@ function Register() {
 
 	const navigateToHome = () => navigate(-1);
 
-	// ------------------------------------
-	//  HANDLE CHANGE + VALIDACIONES EN TIEMPO REAL
-	// ------------------------------------
 	function handleChange(e) {
 		const { name, value } = e.target;
 
@@ -36,9 +33,6 @@ function Register() {
 		setErrors((prev) => ({ ...prev, [name]: error }));
 	}
 
-	// ------------------------------------
-	//  VALIDACIONES POR CAMPO
-	// ------------------------------------
 	function validateField(name, value) {
 		let error = "";
 
@@ -69,9 +63,6 @@ function Register() {
 		return error;
 	}
 
-	// ------------------------------------
-	//  VALIDACIÓN FINAL + LLAMADA AL HOOK
-	// ------------------------------------
 	async function handleSubmit(e) {
 		e.preventDefault();
 

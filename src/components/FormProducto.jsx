@@ -5,6 +5,8 @@ import { PencilLine, DollarSign, ImageUp } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import useCategories from "../hooks/useCategories";
+import Swal from "sweetalert2";
+
 
 
 function FormProducto() {
@@ -16,10 +18,51 @@ function FormProducto() {
 		price: "",
 		category: "",
 		id: "",
+		discount: ""
 	});
 	const { refreshAccessToken, logout, accessToken } = useAuth();
 	const { categories } = useCategories();
+	const [errors, setErrors] = useState({});
+	function validateField(name, value) {
+		let errorMsg = "";
 
+		if (name === "title" && (value !== "" && value.trim().length < 3)) {
+			errorMsg = "El título debe tener al menos 3 caracteres";
+		}
+
+		if (name === "description" && (value !== "" && value.trim().length < 5)) {
+			errorMsg = "La drescripcion debe tener al menos 5 caracteres";
+		}
+
+		if (name === "price" && (value === "" || Number(value) <= 0)) {
+			errorMsg = "El precio debe ser mayor a 0";
+		}
+
+		if (name === "stock" && (value === "" || Number(value) <= 0)) {
+			errorMsg = "El stock debe ser mayor a 0";
+		}
+
+
+		if (name === "discount") {
+			const discountValue = Number(value);
+			const priceValue = Number(formData.price);
+
+			if (discountValue < 0) {
+				errorMsg = "El descuento no puede ser negativo";
+			} else if (discountValue >= priceValue) {
+				errorMsg = "El descuento no puede ser mayor o igual al precio";
+			}
+		}
+
+		setErrors((prev) => ({ ...prev, [name]: errorMsg }));
+	}
+
+	function removeImage(index) {
+		setFormData((prev) => ({
+			...prev,
+			images: prev.images.filter((_, i) => i !== index),
+		}));
+	}
 
 	function navigateToHome() {
 		navigate(-1);
@@ -44,9 +87,9 @@ function FormProducto() {
 		}
 
 		setFormData((prev) => ({
-    ...prev,
-    images: [...prev.images, ...base64Images],
-  }));
+			...prev,
+			images: [...prev.images, ...base64Images],
+		}));
 
 	}
 
@@ -76,8 +119,12 @@ function FormProducto() {
 	async function saveProduct(e) {
 		e.preventDefault();
 
-		if (!formData.title || !formData.price || !formData.category) {
-			toast.error("Por favor completa todos los campos requeridos");
+		if (!formData.title || !formData.description || !formData.price || !formData.category || !formData.stock || formData.images?.length == 0) {
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "Por favor completa todos los campos requeridos",
+			});
 			return;
 		}
 
@@ -88,6 +135,7 @@ function FormProducto() {
 			category: formData.category,
 			stock: parseInt(formData.stock) || 0,
 			images: formData.images,
+			discount: parseFloat(formData.discount) || 0,
 		};
 
 		try {
@@ -101,16 +149,24 @@ function FormProducto() {
 				if (refreshResult && refreshResult.accessToken) {
 					respuesta = await requestCreateProduct(productData, refreshResult.accessToken)
 
-					console.log("llego", respuesta);
-
 					if (respuesta.status === 401) {
-						toast.error("Sesión expirada, por favor inicia sesión nuevamente");
+						Swal.fire({
+							icon: "error",
+							title: "Error",
+							text: "Sesión expirada, por favor inicia sesión nuevamente",
+						});
+						// toast.error("Sesión expirada, por favor inicia sesión nuevamente");
 						logout();
 						navigate("/login");
 						return;
 					}
 				} else {
-					toast.error("No se pudo refrescar el token");
+					Swal.fire({
+							icon: "error",
+							title: "Error",
+							text: "No se pudo refrescar el token",
+						});
+					//toast.error("No se pudo refrescar el token");
 					logout();
 					navigate("/login");
 					return;
@@ -121,8 +177,13 @@ function FormProducto() {
 				throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
 			}
 
-			const data = await respuesta.json();
-			console.log(data);
+			await respuesta.json();
+			Swal.fire({
+				icon: "success",
+				title: "Producto creado",
+				text: "Producto creado correctamente",
+				confirmButtonColor: "#10b981"
+			});
 			toast.success("Producto creado correctamente");
 
 			setFormData({
@@ -130,11 +191,12 @@ function FormProducto() {
 				description: "",
 				images: [],
 				price: "",
+				stock: "",
 				category: "",
 				id: "",
+				discount: ""
 			});
 		} catch (error) {
-			console.error("Error al crear producto:", error);
 			toast.error(`Error al crear el producto: ${error.message}`);
 		}
 	}
@@ -150,8 +212,12 @@ function FormProducto() {
 				inputType={"text"}
 				placeholder={"Mens Casual Slim Fit"}
 				value={formData.title}
-				onChangeFn={(e) => setFormData({ ...formData, title: e.target.value })}
+				onChangeFn={(e) => {
+					setFormData({ ...formData, title: e.target.value });
+					validateField("title", e.target.value);
+				}}
 			/>
+			{errors.title && <p className="text-red-400 text-sm">{errors.title}</p>}
 
 			<FormInput
 				icon={<PencilLine size={18} />}
@@ -161,10 +227,12 @@ function FormProducto() {
 					"49 INCH SUPER ULTRAWIDE 32:9 CURVED GAMING MONITOR with dual 27 inch screen side ..."
 				}
 				value={formData.description}
-				onChangeFn={(e) =>
-					setFormData({ ...formData, description: e.target.value })
-				}
+				onChangeFn={(e) => {
+					setFormData({ ...formData, description: e.target.value });
+					validateField("description", e.target.value);
+				}}
 			/>
+			{errors.description && <p className="text-red-400 text-sm">{errors.description}</p>}
 
 			<FormInput
 				icon={<DollarSign size={18} />}
@@ -172,8 +240,12 @@ function FormProducto() {
 				inputType={"number"}
 				placeholder={"19.99"}
 				value={formData.price}
-				onChangeFn={(e) => setFormData({ ...formData, price: e.target.value })}
+				onChangeFn={(e) => {
+					setFormData({ ...formData, price: e.target.value });
+					validateField("price", e.target.value);
+				}}
 			/>
+			{errors.price && <p className="text-red-400 text-sm">{errors.price}</p>}
 
 			<FormInput
 				icon={<DollarSign size={18} />}
@@ -181,8 +253,12 @@ function FormProducto() {
 				inputType={"number"}
 				placeholder={"2"}
 				value={formData.stock}
-				onChangeFn={(e) => setFormData({ ...formData, stock: e.target.value })}
+				onChangeFn={(e) => {
+					setFormData({ ...formData, stock: e.target.value });
+					validateField("stock", e.target.value);
+				}}
 			/>
+			{errors.stock && <p className="text-red-400 text-sm">{errors.stock}</p>}
 
 
 			<FormInput
@@ -194,30 +270,66 @@ function FormProducto() {
 				onChangeFn={handleImageChange}
 				multiple
 			/>
+
 			{formData.images.length > 0 && (
-				<div className="flex gap-3 mt-3">
+				<div className="flex gap-3 mt-3 flex-wrap">
 					{formData.images.map((img, i) => (
-						<img key={i} src={img} alt="" className="w-24 h-24 object-cover rounded" />
+						<div key={i} className="relative">
+							<img
+								src={img}
+								alt=""
+								className="w-24 h-24 object-cover rounded border border-gray-600"
+							/>
+							<button
+								type="button"
+								onClick={() => removeImage(i)}
+								className="absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-red-500"
+							>
+								✕
+							</button>
+						</div>
 					))}
 				</div>
 			)}
+			<div className="flex flex-col text-gray-300 w-full">
+				<div className="flex flex-row justify-start items-center gap-2 mb-2">
+					<DollarSign size={18} />
+					<label className="text-sm font-medium">
+						{"Categoria"}
+					</label>
+				</div>
 
-			<select
-				name="category"
-				id="category"
-				value={formData.category}
-				onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-				className="text-white bg-gray-800 border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-			>
-				<option value="">Select category</option>
-				{categories.map((cat) => (
-					<option value={cat._id} key={cat._id}>
-						{cat.name}
-					</option>
-				))}
-			</select>
+				<select
+					name="category"
+					id="category"
+					value={formData.category}
+					onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+					className="text-white bg-gray-800 border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+				>
+					<option value="">Select category</option>
+					{categories.map((cat) => (
+						<option value={cat._id} key={cat._id}>
+							{cat.name}
+						</option>
+					))}
+				</select>
+				{errors.category && <p className="text-red-400 text-sm">{errors.category}</p>}
 
 
+			</div>
+
+			<FormInput
+				icon={<DollarSign size={18} />}
+				labelText={"Descuento"}
+				inputType={"number"}
+				placeholder={"200"}
+				value={formData.discount}
+				onChangeFn={(e) => {
+					setFormData({ ...formData, discount: e.target.value });
+					validateField("discount", e.target.value);
+				}}
+			/>
+			{errors.discount && <p className="text-red-400 text-sm">{errors.discount}</p>}
 
 			<div className="flex flex-row justify-center gap-4 pt-6">
 				<button

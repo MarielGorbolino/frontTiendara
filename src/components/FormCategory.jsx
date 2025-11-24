@@ -3,6 +3,7 @@ import FormInput from "./FormInput"
 import { useState } from "react"
 import { PencilLine,DollarSign, ImageUp } from "lucide-react"
 import { useAuth } from "../hooks/useAuth"
+import Swal from "sweetalert2"
 
 function FormCategory(){
     const navigate = useNavigate()
@@ -70,8 +71,6 @@ function FormCategory(){
             }
         })
 
-          console.log("llego", respuesta);
-
           if (respuesta.status === 401) {
             // toast.error("Sesión expirada, por favor inicia sesión nuevamente");
             logout();
@@ -90,8 +89,7 @@ function FormCategory(){
         throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
       }
 
-      const data = await respuesta.json();
-      console.log(data);
+      await respuesta.json();
       // toast.success("Producto creado correctamente");
 
       setFormData({
@@ -104,6 +102,11 @@ function FormCategory(){
       });
     } catch (error) {
       console.error("Error al crear producto:", error);
+      Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Error al crear producto:",
+                  });
       // toast.error(`Error al crear el producto: ${error.message}`);
     }
   }

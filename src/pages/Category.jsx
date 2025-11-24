@@ -27,7 +27,9 @@ function Category() {
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
       {loading ? (
-        <p>Cargando...</p>
+       <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-400 mx-auto mb-4"></div>
+      </div>
       ) : products.length > 0 ? (
         <ProductList products={products} />
       ) : showMessage ? (
@@ -37,6 +39,7 @@ function Category() {
       ) : null}
     </div>
   );
+
 }
 
 export default Category;

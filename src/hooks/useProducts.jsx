@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "./useAuth"; // si usás token
-import { toast } from "react-toastify";
 import { useApi } from "./useApi";
+import Swal from "sweetalert2";
+import CartProvider from "./CartProvider";
 
 export default function useProducts() {
   const [products, setProducts] = useState([]);
@@ -9,17 +10,16 @@ export default function useProducts() {
   const [error, setError] = useState(null);
   const { accessToken } = useAuth();
   const urlapi = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
-    const { request } = useApi();
+  const { request } = useApi();
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-    const res = await request(urlapi + "/api/products")
-      setProducts(res.data); // ← acá actualizas el estado correctamente
+      const res = await request(urlapi + "/api/products");
+      setProducts(res.data);
     } catch (e) {
-      console.log(e);
       setError(e.message);
     } finally {
       setIsLoading(false);
@@ -32,27 +32,46 @@ export default function useProducts() {
 
   const deleteProduct = async (id) => {
     try {
-        await request(urlapi + `/api/products/${id}`, "DELETE")
-        await fetchProducts();
-
-      toast.success("Producto eliminado");
+      await request(urlapi + `/api/products/${id}`, "DELETE");
+      await fetchProducts();
+      Swal.fire({
+        icon: "success",
+        title: "success",
+        text: "Producto eliminado correctamente",
+      });
     } catch (e) {
-      console.log(e);
-      toast.error("Error al eliminar producto");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al eliminar producto" + e.message,
+      });
     }
   };
 
-    const saveProduct = async (formData) => {
-        
+  const updateParcialProduct = async (id, formData) => {
     try {
-        await request(urlapi + `/api/products`, "POST", JSON.stringify(formData))
-
-      toast.success("Producto creado");
+      await request(urlapi + `/api/products/` + id, "PATCH", formData);
+      await fetchProducts();
+      Swal.fire({
+        icon: "success",
+        title: "success",
+        text: "Producto actualizado correctamente",
+      });
     } catch (e) {
-      console.log(e);
-      toast.error("Error al crear producto");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al crear producto" + e.message,
+      });
     }
   };
 
-  return { products, isLoading, error, fetchProducts, deleteProduct, saveProduct };
+  return {
+    products,
+    isLoading,
+    error,
+    fetchProducts,
+    deleteProduct,
+    updateParcialProduct,
+  };
 }
