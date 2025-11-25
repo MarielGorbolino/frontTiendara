@@ -4,7 +4,7 @@ function CategoryItem({ category }) {
     <div className="overflow-hidden h-96 w-full rounded-2xl group relative">
       <Link to={"/category/" + (category.name).replace(" ","")}>
         <div className="w-full h-full cursor-pointer">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 opacity-50 z-10">
+          <div className="absolute inset-0 bg-linear-to-b from-transparent to-gray-900 opacity-50 z-10">
             <img src={category.image} alt={category.name} className="w-full h-full object-cover"/>
           </div>
           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">

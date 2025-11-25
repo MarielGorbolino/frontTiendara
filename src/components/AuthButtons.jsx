@@ -11,8 +11,7 @@ function AuthButtons({ isLogin,logOut }) {
   }
 
   if (isLogin) {
-    //boton de logout (solo se ve si estamos logueados)
-return (
+  return (
       <button
         onClick={logoutLocal}
         className={"flex items-center gap-2 px-4 py-2 rounded-md text-white text-sm bg-gray-700 hover:bg-gray-600"}
@@ -22,7 +21,6 @@ return (
       </button>
     );
   }
-  //botones de login y register (solo se ven si no estamos logueados)
   return (
     <>
       <Link to={"/login"} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md flex items-center w-25">

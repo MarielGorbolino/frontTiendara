@@ -1,10 +1,10 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { CreditCard, Shield } from "lucide-react";
+import Swal from "sweetalert2";
 
-const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
+const StripeForm = ({ paymentIntent, getTotal, shippingInfo, clearCart }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -13,15 +13,15 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
   const cardStyle = {
     style: {
       base: {
-        fontSize: '16px',
-        color: '#ffffff',
-        '::placeholder': {
-          color: '#aab7c4',
+        fontSize: "16px",
+        color: "#ffffff",
+        "::placeholder": {
+          color: "#aab7c4",
         },
       },
       invalid: {
-        color: '#fa755a',
-        iconColor: '#fa755a',
+        color: "#fa755a",
+        iconColor: "#fa755a",
       },
     },
     hidePostalCode: true,
@@ -37,11 +37,6 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
     setLoading(true);
 
     try {
-      /*if (!paymentIntent || !paymentIntent.clientSecret) {
-        console.log("intento de pago error");
-        throw new Error("No se encontró un PaymentIntent válido. Intente recargar la página.");
-      }*/
-
       const clientSecret = paymentIntent.clientSecret;
 
       const { error } = await stripe.confirmCardPayment(clientSecret, {
@@ -49,23 +44,29 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
           card: elements.getElement(CardElement),
           billing_details: {
             name: shippingInfo?.name || "Usuario",
-            email: shippingInfo?.email || "usuario@ejemplo.com"
-          }
-        }
+            email: shippingInfo?.email || "usuario@ejemplo.com",
+          },
+        },
       });
 
       if (error) {
-        toast.error(`Error en el pago: ${error.message}`);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `Error en el pago: ${error.message}`,
+        });
         navigate("/errorPay");
       } else {
-        toast.success("¡Pago realizado exitosamente!");
         navigate("/successPay");
-        //registrar pedido en db
-        clearCart()
+        clearCart();
       }
     } catch (error) {
-      toast.error("Error al procesar el pago", error.message);
-      navigate("/errorPago");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Error en el pago: ${error.message}`,
+      });
+      navigate("/errorPay");
     } finally {
       setLoading(false);
     }
@@ -98,7 +99,7 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo,clearCart }) => {
           disabled={!stripe || loading}
           className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-md transition-colors"
         >
-          {loading ? 'Procesando...' : `Pagar $${getTotal()}`}
+          {loading ? "Procesando..." : `Pagar $${getTotal()}`}
         </button>
       </form>
     </div>

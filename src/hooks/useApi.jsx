@@ -1,6 +1,5 @@
 import Swal from "sweetalert2";
 import { useAuth } from "../hooks/useAuth";
-import { toast } from "react-toastify";
 
 export function useApi() {
   const { accessToken, refreshAccessToken } = useAuth();
@@ -11,8 +10,8 @@ export function useApi() {
         method,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": accessToken
-        }
+          Authorization: accessToken,
+        },
       };
 
       if (body) options.body = JSON.stringify(body);
@@ -27,21 +26,29 @@ export function useApi() {
         }
 
         Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Sesión expirada",
-              });
+          icon: "error",
+          title: "Error",
+          text: "Sesión expirada",
+        });
         return null;
       }
 
       if (!res.ok) {
-        toast.error(`Error: ${method} ${url}`);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `Error: ${method} ${url}`,
+        });
         return null;
       }
 
       return await res.json();
     } catch (error) {
-      toast.error("Error de conexión", error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Error  de conexión: ${error.message}`,
+      });
       return null;
     }
   };

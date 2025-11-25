@@ -3,15 +3,17 @@ const ResumenCompra = ({cart,getTotal}) => {
         {cart?.detalle?.map((item)=>(
             <div key={item._id}>
                 <div>
-                    <p>{item.product.name}</p>
+                    <p  className="text-blue-300">{item.product.title}</p>
                     <p>cantidad: {item.quantity}</p>
                 </div>
-                <p>${(item.price * item.quantity)}</p>
+                <p>${((item.price * item.quantity).toLocaleString("es-AR"))}</p>
             </div>
         ))}
 
         <div>
-            <p>Total:{getTotal()}</p>
+            <p className="text-xl">
+            Total: <span className="text-green-400 font-bold">${getTotal()}</span>
+            </p>
         </div>
     </div>
 }
