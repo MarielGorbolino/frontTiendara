@@ -32,7 +32,6 @@ export function useRegister() {
 
     } catch (error) {
       setError(error.message);
-      console.error("Error en registerUser:", error);
       return null;
     } finally {
       setIsLoading(false);

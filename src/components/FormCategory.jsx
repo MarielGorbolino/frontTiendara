@@ -95,7 +95,6 @@ function FormCategory(){
         id: "",
       });
     } catch (error) {
-      console.error("Error al crear producto:", error);
       Swal.fire({
                     icon: "error",
                     title: "Error",
