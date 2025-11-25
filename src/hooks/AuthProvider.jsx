@@ -33,7 +33,7 @@ export default function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const urlapi = import.meta.env.VITE_URL_BACK || "http://localhost:3008"; //https://vercel.miproyecto.com
+      const urlapi = import.meta.env.VITE_URL_BACK;
       const response = await fetch(`${urlapi}/api/user/login`, {
         method: "POST",
         headers: {
@@ -90,7 +90,7 @@ export default function AuthProvider({ children }) {
       if (!refreshToken) {
         throw new Error("no hay refresh token disponble");
       }
-      const urlapi = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+      const urlapi = import.meta.env.VITE_URL_BACK;
       const response = await fetch(`${urlapi}/api/user/token`, {
         method: "POST",
         headers: {

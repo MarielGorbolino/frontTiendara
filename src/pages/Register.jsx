@@ -98,9 +98,6 @@ function Register() {
 
     setErrors({});
 
-    // ---------------------------
-    //   LLAMADA AL CUSTOM HOOK
-    // ---------------------------
     const result = await registerUser({
       email: formData.email,
       password: formData.contrasenia,

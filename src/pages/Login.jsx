@@ -7,8 +7,8 @@ import Swal from "sweetalert2";
 
 function Login() {
   const [formData, setFormData] = useState({
-    email: "", //admin@admin.com
-    contrasenia: "", //admin
+    email: "",
+    contrasenia: "",
   });
 
   const { login } = useAuth();

@@ -22,7 +22,7 @@ function FormProducto() {
   const { refreshAccessToken, logout, accessToken } = useAuth();
   const { categories } = useCategories();
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false); // ⬅️ NUEVO
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function validateField(name, value) {
     let errorMsg = "";
@@ -104,7 +104,7 @@ function FormProducto() {
   }
 
   async function requestCreateProduct(newProduct, token) {
-    const apiBaseUrl = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+    const apiBaseUrl = import.meta.env.VITE_URL_BACK;
 
     return await fetch(`${apiBaseUrl}/api/products`, {
       method: "POST",
@@ -119,8 +119,8 @@ function FormProducto() {
   async function saveProduct(e) {
     e.preventDefault();
 
-    if (isSubmitting) return; // ⛔ evita doble envío
-    setIsSubmitting(true); // 🔒 deshabilita botón
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     if (
       !formData.title ||
@@ -135,7 +135,7 @@ function FormProducto() {
         title: "Error",
         text: "Por favor completa todos los campos requeridos",
       });
-      setIsSubmitting(false); // 🔓 desbloqueo
+      setIsSubmitting(false);
       return;
     }
 
@@ -169,7 +169,7 @@ function FormProducto() {
             });
             logout();
             navigate("/login");
-            setIsSubmitting(false); // 🔓 desbloqueo
+            setIsSubmitting(false);
             return;
           }
         } else {
@@ -180,7 +180,7 @@ function FormProducto() {
           });
           logout();
           navigate("/login");
-          setIsSubmitting(false); // 🔓 desbloqueo
+          setIsSubmitting(false);
           return;
         }
       }
@@ -216,7 +216,7 @@ function FormProducto() {
       });
     }
 
-    setIsSubmitting(false); // 🔓 botón vuelve a habilitarse
+    setIsSubmitting(false);
   }
 
   return (

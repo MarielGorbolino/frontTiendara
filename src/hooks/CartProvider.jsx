@@ -11,7 +11,7 @@ function CartProvider({ children }) {
   const [loadingId, setLoadingId] = useState(null);
   const [loadingCart, setLoadingCart] = useState(false);
 
-  const urlapi = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+  const urlapi = import.meta.env.VITE_URL_BACK;
 
   const crearIntentoPago = async () => {
     if (!cart || !cart.detalle || cart.detalle.length === 0) {

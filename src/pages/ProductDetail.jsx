@@ -99,7 +99,7 @@ function ProductDetail() {
           <button
             onClick={async () => {
               await updateProductCart(product._id);
-              await fetchProduct(); // 🔥 vuelve a pedir el producto actualizado
+              await fetchProduct();
             }}
             disabled={!user?.id || product.stock === 0}
             title={
@@ -128,7 +128,7 @@ function ProductDetail() {
                 src={img}
                 alt={`img-${i}`}
                 className="w-full h-40 object-cover rounded border border-gray-600"
-                onClick={() => setMainImage(img)} // cambiar imagen principal al hacer click
+                onClick={() => setMainImage(img)}
               />
             ))}
           </div>

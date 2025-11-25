@@ -9,7 +9,3 @@ function Icon() {
 }
 
 export default Icon;
-
-
-//mgorbolino_db_user
-// ZiGPkIA46zxcDPi9

@@ -18,7 +18,7 @@ function ProductCard({ product }) {
   return (
     <div className="bg-gray-900 rounded-lg p-4">
       <Link to={"/product/" + (product._id || product.id)}>
-        <h2 className="text-blue-400 font-bold text-lg m-10">
+        <h2 className="text-xl font-semibold line-clamp-1 mb-5">
           {product.title}
         </h2>
         <div className="relative w-full">
@@ -28,17 +28,12 @@ function ProductCard({ product }) {
             alt={product.title}
           />
         </div>
-        <p className="text-gray-300 text-justify py-2">{product.description}</p>
-        <p>{`Precio: $${product.price.toLocaleString("es-AR")}`}</p>
+        <p className="text-gray-300 text-justify py-2">{`Precio: $${product.price.toLocaleString("es-AR")}`}</p>
         <p>{`Envio: ${
           product.price > PRODUCT_PRICE
             ? "GRATIS"
             : "$" + (product.price * PORCENTAJE).toLocaleString("es-AR")
         }`}</p>
-        <div>
-          <p>{product.rating?.rate}</p>
-          <p>{product.rating?.count}</p>
-        </div>
       </Link>
       <div className="flex justify-end mt-3">
         <button

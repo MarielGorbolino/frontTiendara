@@ -10,10 +10,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import CartEmpty from "../components/CartEmpty";
 
-// Configurar Stripe (reemplaza con tu clave pública)
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_SECRET || "pk_test_..."
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_SECRET);
 
 const Checkout = () => {
   const {
@@ -23,20 +20,28 @@ const Checkout = () => {
     getTotalItems,
     intentoPago,
     crearIntentoPago,
+    loadingCart,
   } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [shippingInfo, setShippingInfo] = useState({
-    name: user?.nombre || "",
+    name: user?.name || "",
     email: user?.email || "",
     address: "",
     city: "",
     country: "Argentina",
   });
 
+  const isShippingValid =
+    shippingInfo.name.trim() !== "" &&
+    shippingInfo.email.trim() !== "" &&
+    shippingInfo.address.trim() !== "" &&
+    shippingInfo.city.trim() !== "" &&
+    shippingInfo.country.trim() !== "";
+
   useEffect(() => {
-    if (!intentoPago && cart.detalle?.length > 0) {
+    if (!intentoPago && cart?.detalle?.length > 0) {
       crearIntentoPago();
     }
   }, [cart]);
@@ -47,6 +52,17 @@ const Checkout = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  if (loadingCart) {
+    return (
+     <div className="min-h-screen bg-gray-700 text-white pt-16 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-400 mx-auto mb-4"></div>
+        <p className="text-blue-400 text-xl">Cargando...</p>
+      </div>
+    </div>
+    );
+  }
 
   if (!cart?.detalle || getTotalItems() === 0) {
     return <CartEmpty />;
@@ -81,6 +97,7 @@ const Checkout = () => {
                 getTotal={getTotal}
                 clearCart={clearCart}
                 shippingInfo={shippingInfo}
+                isShippingValid={isShippingValid}
               />
             </div>
           </div>

@@ -42,8 +42,8 @@ function Category() {
             <h1 className="text-blue-400 text-center text-3xl mb-2 font-bold">
               Productos
             </h1>
-            <p className="text-gray-300 text-center mb-8">
-              Los mejores productos que encontraras
+            <p className="text-gray-300 text-center text-2xl mb-8">
+              {category}
             </p>
           </div>
           <ProductList products={products} />

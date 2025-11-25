@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "./useAuth"; // si usás token
+import { useAuth } from "./useAuth";
 import { useApi } from "./useApi";
 import Swal from "sweetalert2";
 import CartProvider from "./CartProvider";
@@ -9,7 +9,7 @@ export default function useProducts() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { accessToken } = useAuth();
-  const urlapi = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+  const urlapi = import.meta.env.VITE_URL_BACK;
   const { request } = useApi();
 
   const fetchProducts = useCallback(async () => {

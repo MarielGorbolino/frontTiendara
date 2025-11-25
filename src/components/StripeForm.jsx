@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { CreditCard, Shield } from "lucide-react";
 import Swal from "sweetalert2";
 
-const StripeForm = ({ paymentIntent, getTotal, shippingInfo, clearCart }) => {
+const StripeForm = ({ paymentIntent, getTotal, shippingInfo, clearCart, isShippingValid }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo, clearCart }) => {
 
         <button
           type="submit"
-          disabled={!stripe || loading}
+          disabled={!stripe || loading || !isShippingValid}
           className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-md transition-colors"
         >
           {loading ? "Procesando..." : `Pagar $${getTotal()}`}

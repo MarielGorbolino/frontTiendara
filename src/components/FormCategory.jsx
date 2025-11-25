@@ -9,7 +9,7 @@ function FormCategory(){
     const navigate = useNavigate()
       const { refreshAccessToken, logout, accessToken } = useAuth();
       const apiBaseUrl =
-			import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+			import.meta.env.VITE_URL_BACK;
 
     const [formData, setFormData] = useState({
         name:"",
@@ -90,9 +90,6 @@ function FormCategory(){
         title: "",
         description: "",
         image: "",
-        price: "",
-        category: "",
-        id: "",
       });
     } catch (error) {
       Swal.fire({

@@ -6,7 +6,7 @@ import { useAuth } from "./useAuth";
 	const [categories, setCategories] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const apiBaseUrl = import.meta.env.VITE_URL_BACK || "http://localhost:3008";
+	const apiBaseUrl = import.meta.env.VITE_URL_BACK;
 	const { request } = useApi();
     const { accessToken } = useAuth();
   

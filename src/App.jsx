@@ -23,7 +23,6 @@ function App() {
         <CartProvider>
           <Navbar />
           <Routes>
-            {/*rutas sin auth*/}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -32,7 +31,6 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/*" element={<h1>404</h1>} />
-            {/*rutas para el admin*/}
             <Route
               path="/dashboard"
               element={
@@ -41,7 +39,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/*rutas para el user*/}
             <Route
               path="/cart"
               element={
@@ -74,7 +71,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/*rutas para el vendedor*/}
           </Routes>
         </CartProvider>
       </AuthProvider>
