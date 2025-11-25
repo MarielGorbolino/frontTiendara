@@ -2,9 +2,10 @@ import { Trash2, Plus, Minus, ShoppingCart } from "lucide-react";
 import useCart from "../hooks/useCart";
 
 function CartProduct({ item }) {
-  const { removeProductCart, deleteProductCart, updateProductCart } = useCart();
-
+const { removeProductCart, deleteProductCart, updateProductCart, loadingId } = useCart();
   const product = item.product;
+const isLoading = loadingId === product._id;
+
   const subtotal = item.quantity * item.price;
 
   return (
@@ -28,33 +29,41 @@ function CartProduct({ item }) {
         </h3>
 
         <p className="text-sm text-gray-300">
-          ${item.price} c/u
+          ${item.price.toLocaleString("es-AR")} c/u
         </p>
 
         <div className="flex items-center gap-3 mt-1">
           <button
             onClick={() => removeProductCart(product._id)}
-            className="bg-gray-700 hover:bg-gray-600 text-white p-1 rounded-full"
+            disabled={isLoading}
+            className="bg-gray-700 disabled:bg-gray-600 disabled:opacity-50 text-white p-1 rounded-full"
           >
-            <Minus size={16} />
+            {isLoading ? (
+              <div className="animate-spin h-3 w-3 border border-white border-t-transparent rounded-full"></div>
+            ) : (
+              <Minus size={16} />
+            )}
           </button>
-
-          <span className="text-white font-semibold w-6 text-center">
+ <span className="text-white font-semibold w-6 text-center">
             {item.quantity}
           </span>
-
           <button
             onClick={() => updateProductCart(product._id)}
-            className="bg-gray-700 hover:bg-gray-600 text-white p-1 rounded-full"
+            disabled={isLoading}
+            className="bg-gray-700 disabled:bg-gray-600 disabled:opacity-50 text-white p-1 rounded-full"
           >
-            <Plus size={16} />
+            {isLoading ? (
+              <div className="animate-spin h-3 w-3 border border-white border-t-transparent rounded-full"></div>
+            ) : (
+              <Plus size={16} />
+            )}
           </button>
         </div>
       </div>
 
       <div className="flex flex-col justify-center items-end">
         <p className="text-green-400 font-bold text-lg">
-          ${subtotal.toFixed(2)}
+          ${subtotal.toLocaleString("es-AR")}
         </p>
         <span className="text-xs text-gray-400">Subtotal</span>
       </div>

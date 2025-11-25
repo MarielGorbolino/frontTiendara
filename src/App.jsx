@@ -9,11 +9,12 @@ import Category from "./pages/Category";
 import Categorys from "./pages/Categorys";
 import CartProvider from "./hooks/CartProvider";
 import AuthProvider from "./hooks/AuthProvider";
-import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Checkout from "./pages/Checkout";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
+import SuccessPay from "./pages/SuccessPay";
+import ErrorPay from "./pages/ErrorPay";
 
 function App() {
   return (
@@ -32,25 +33,49 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/*" element={<h1>404</h1>} />
             {/*rutas para el admin*/}
-            <Route path="/dashboard" element={<ProtectedRoute requereAdmin={true}><Dashboard /></ProtectedRoute>} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute requereAdmin={true}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             {/*rutas para el user*/}
-            <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/errorPay"
+              element={
+                <ProtectedRoute>
+                  <ErrorPay />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/successPay"
+              element={
+                <ProtectedRoute>
+                  <SuccessPay />
+                </ProtectedRoute>
+              }
+            />
             {/*rutas para el vendedor*/}
-            
           </Routes>
-          <ToastContainer
-            position="top-right"
-            autoClose={3008}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
         </CartProvider>
       </AuthProvider>
     </>

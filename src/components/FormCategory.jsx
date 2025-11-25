@@ -7,7 +7,6 @@ import Swal from "sweetalert2"
 
 function FormCategory(){
     const navigate = useNavigate()
-    //const [imgb64,setImgb64] = useState("")
       const { refreshAccessToken, logout, accessToken } = useAuth();
       const apiBaseUrl =
 			import.meta.env.VITE_URL_BACK || "http://localhost:3008";
@@ -26,7 +25,7 @@ function FormCategory(){
         const file = e.target.files?.[0];
               if (!file) return;
 
-      const maxSizeMB = 1; // tamaño máximo permitido (1 MB)
+      const maxSizeMB = 1;
       const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
       if (file.size > maxSizeBytes) {
@@ -56,7 +55,6 @@ function FormCategory(){
         })
 
       if (respuesta.status === 401) {
-        // toast.info("Token expirado, refrescando...");
 
         const refreshResult = await refreshAccessToken();
 
@@ -72,13 +70,11 @@ function FormCategory(){
         })
 
           if (respuesta.status === 401) {
-            // toast.error("Sesión expirada, por favor inicia sesión nuevamente");
             logout();
             navigate("/login");
             return;
           }
         } else {
-          // toast.error("No se pudo refrescar el token");
           logout();
           navigate("/login");
           return;
@@ -90,8 +86,6 @@ function FormCategory(){
       }
 
       await respuesta.json();
-      // toast.success("Producto creado correctamente");
-
       setFormData({
         title: "",
         description: "",
@@ -107,7 +101,6 @@ function FormCategory(){
                     title: "Error",
                     text: "Error al crear producto:",
                   });
-      // toast.error(`Error al crear el producto: ${error.message}`);
     }
   }
 

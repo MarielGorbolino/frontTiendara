@@ -3,18 +3,16 @@ import useCategories from "../hooks/useCategories";
 function Categorys() {
   const {categories,isLoading,error} = useCategories()
 
-  if (isLoading) {
-    return (
-      <div className="relative min-h-screen text-white overflow-hidden bg-gray-700 pt-16">
-        <div className="relative z-10 mx-auto max-w-7xl mb-8 flex justify-center items-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-400 mx-auto mb-4"></div>
-            <p className="text-blue-400 text-xl">Cargando categorías...</p>
-          </div>
-        </div>
+if (isLoading) {
+  return (
+    <div className="min-h-screen bg-gray-700 text-white pt-16 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-400 mx-auto mb-4"></div>
+        <p className="text-blue-400 text-xl">Cargando categorías...</p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (error) {
     return (

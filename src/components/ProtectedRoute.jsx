@@ -7,11 +7,9 @@ function ProtectedRoute({children,requereAdmin = false}){
         return <div>cargando...</div> 
     }
 
-    //yo te dejo pasar si estas autenticado, sino te mando login
     if(!isAuthenticated){
         return <Navigate to="/login" replace/>
     }
-    //si tenes el permiso te dejo pasar, sino te llevo al /
     if(requereAdmin && user.role !=="admin"){
         return <Navigate to="/" replace/>
     }

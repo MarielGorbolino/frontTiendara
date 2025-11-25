@@ -5,7 +5,6 @@ export default function Home() {
 	return (
 		<div className="min-h-screen flex flex-col">
 
-			{/* BANNER */}
 			<section
 				className="
     relative 
@@ -52,7 +51,6 @@ export default function Home() {
       px-6
     "
 				>
-					{/* CARD 1 */}
 					<Link to="/login">
 						<div className="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col items-center text-center cursor-pointer hover:bg-gray-700 transition">
 							<LogIn size={40} className="text-emerald-400 mb-3" />
@@ -65,7 +63,6 @@ export default function Home() {
 						</div>
 					</Link>
 
-					{/* CARD 2 */}
 					<Link to="/products">
 						<div className="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col items-center text-center cursor-pointer hover:bg-gray-700 transition">
 							<TrendingUp size={40} className="text-emerald-400 mb-3" />
@@ -78,7 +75,6 @@ export default function Home() {
 						</div>
 					</Link>
 
-					{/* CARD 3 */}
 					<Link to="/category">
 						<div className="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col items-center text-center cursor-pointer hover:bg-gray-700 transition">
 							<Grid2x2 size={40} className="text-emerald-400 mb-3" />
@@ -93,12 +89,9 @@ export default function Home() {
 				</div>
 			</section>
 
-
-			{/* FOOTER */}
 			<footer className="bg-gray-800 text-gray-300 py-10 px-6">
 				<div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
 
-					{/* Atención al Cliente */}
 					<div>
 						<h4 className="text-lg font-semibold mb-2">Atención al cliente</h4>
 						<p>0800 122 0338</p>
@@ -107,13 +100,11 @@ export default function Home() {
 						<p>SA de 9:00 a 13:00</p>
 					</div>
 
-					{/* Cobranzas */}
 					<div>
 						<h4 className="text-lg font-semibold mb-2">Cobranza de créditos</h4>
 						<p>cobranzas@tiendara.com.ar</p>
 					</div>
 
-					{/* Venta telefónica */}
 					<div>
 						<h4 className="text-lg font-semibold mb-2">Venta telefónica</h4>
 						<p>0810 333 8700</p>
