@@ -16,7 +16,6 @@ function FormProducto() {
     category: "",
     id: "",
     stock: "",
-    discount: "",
   });
 
   const { refreshAccessToken, logout, accessToken } = useAuth();
@@ -41,17 +40,6 @@ function FormProducto() {
 
     if (name === "stock" && (value === "" || Number(value) <= 0)) {
       errorMsg = "El stock debe ser mayor a 0";
-    }
-
-    if (name === "discount") {
-      const discountValue = Number(value);
-      const priceValue = Number(formData.price);
-
-      if (discountValue < 0) {
-        errorMsg = "El descuento no puede ser negativo";
-      } else if (discountValue >= priceValue) {
-        errorMsg = "El descuento no puede ser mayor o igual al precio";
-      }
     }
 
     setErrors((prev) => ({ ...prev, [name]: errorMsg }));
@@ -145,8 +133,7 @@ function FormProducto() {
       price: parseFloat(formData.price),
       category: formData.category,
       stock: parseInt(formData.stock) || 0,
-      images: formData.images,
-      discount: parseFloat(formData.discount) || 0,
+      images: formData.images
     };
 
     try {
@@ -205,8 +192,7 @@ function FormProducto() {
         price: "",
         stock: "",
         category: "",
-        id: "",
-        discount: "",
+        id: ""
       });
     } catch (error) {
       Swal.fire({
@@ -337,21 +323,6 @@ function FormProducto() {
           <p className="text-red-400 text-sm">{errors.category}</p>
         )}
       </div>
-
-      <FormInput
-        icon={<DollarSign size={18} />}
-        labelText={"Descuento"}
-        inputType={"number"}
-        placeholder={"200"}
-        value={formData.discount}
-        onChangeFn={(e) => {
-          setFormData({ ...formData, discount: e.target.value });
-          validateField("discount", e.target.value);
-        }}
-      />
-      {errors.discount && (
-        <p className="text-red-400 text-sm">{errors.discount}</p>
-      )}
 
       <div className="flex flex-row justify-center gap-4 pt-6">
         <button
