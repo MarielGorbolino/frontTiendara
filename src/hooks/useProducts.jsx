@@ -61,7 +61,46 @@ export default function useProducts() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error al crear producto" + e.message,
+        text: "Error al actualizar producto" + e.message,
+      });
+    }
+  };
+
+   const getProductByCategory = async (category) => {
+    try {
+      const res = await request(`${urlapi}/api/products/category/${category}`);
+      setProducts(res.data);
+    } catch (e) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al obtener los productos",
+      });
+    }
+  };
+
+    const fetchProduct = async (id) => {
+    try {
+      const res = await request(`${urlapi}/api/products/${id}`);
+      setProducts(res.data);
+    } catch (e) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al obtener los productos",
+      });
+    }
+  };
+
+   const fetchProductsFilter = async (search, sort, page, pageSize) => {
+    try {
+      const res = await request(`${urlapi}/api/products/filter?search=${search}&sort=${sort}&page=${page}&limit=${pageSize}`);
+      setProducts(res.data);
+    } catch (e) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al obtener los productos",
       });
     }
   };
@@ -73,5 +112,8 @@ export default function useProducts() {
     fetchProducts,
     deleteProduct,
     updateParcialProduct,
+    getProductByCategory,
+    fetchProduct,
+    fetchProductsFilter
   };
 }

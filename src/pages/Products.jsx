@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductoList";
+import useProducts from "../hooks/useProducts";
 
 function Products() {
   const { category } = useParams();
+  const { fetchProductsFilter, products } = useProducts();
 
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showMessage, setShowMessage] = useState(false);
 
@@ -27,17 +28,9 @@ function Products() {
 
   async function fetchProducts() {
     setLoading(true);
-
-    const urlbase = import.meta.env.VITE_URL_BACK;
-
-    const url = `${urlbase}/api/products/filter?search=${search}&sort=${sort}&page=${page}&limit=${pageSize}`;
-
-    const res = await fetch(url);
-    const data = await res.json();
-
-    setProducts(data.data || []);
-    setTotalPages(data.totalPages || 1);
-    setShowMessage(!data.data || data.data.length === 0);
+    fetchProductsFilter(search, sort, page, pageSize);
+    setTotalPages(products.totalPages || 1);
+    setShowMessage(!products.data || products.data.length === 0);
     setLoading(false);
   }
 

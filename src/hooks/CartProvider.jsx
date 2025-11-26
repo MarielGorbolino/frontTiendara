@@ -157,7 +157,6 @@ function CartProvider({ children }) {
       { idProducto },
       idProducto
     );
-    console.log("Agregando al carrito:", response);
     if (response.ok) {
       Swal.fire({
         icon: "success",

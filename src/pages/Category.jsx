@@ -1,26 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductoList";
+import useProducts from "../hooks/useProducts";
 
 function Category() {
   const { category } = useParams();
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { getProductByCategory, products } = useProducts();
   useEffect(() => {
     async function pedirProductosPorCategoria() {
       setLoading(true);
-
       if (category) {
-        const urlbase = import.meta.env.VITE_URL_BACK;
-        const res = await fetch(`${urlbase}/api/products/category/${category}`);
-        const data = await res.json();
-        setProducts(data.data || []);
+            await getProductByCategory(category);
       }
-
       setLoading(false);
     }
-
     pedirProductosPorCategoria();
   }, [category]);
 

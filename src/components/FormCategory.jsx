@@ -145,6 +145,16 @@ function FormCategory() {
     }
   }
 
+  function hasErrors() {
+     const errorEmpty =
+      !formData.name ||
+      !formData.description ||
+      formData.image?.length == 0
+      
+    return errorEmpty || errors && Object.values(errors).some((err) => err && err.length > 0);
+  }
+
+
   return (
     <form
       onSubmit={saveCategory}
@@ -203,15 +213,15 @@ function FormCategory() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting  || hasErrors()}
           className={`px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center text-white
             ${
-              isSubmitting
+              isSubmitting  || hasErrors()
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-emerald-700 hover:bg-emerald-600"
             }`}
         >
-          {isSubmitting ? "Enviando..." : "Enviar"}
+           {isSubmitting ? "Guardando..." : "Guardar"}
         </button>
       </div>
     </form>

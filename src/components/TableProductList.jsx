@@ -35,7 +35,7 @@ function TableProductList() {
             <th className="px-4 py-3 border-b border-gray-700">Producto</th>
             <th className="px-4 py-3 border-b border-gray-700">Precio</th>
             <th className="px-4 py-3 border-b border-gray-700">Categoría</th>
-            <th className="px-4 py-3 border-b border-gray-700">Descipcion</th>
+            <th className="px-4 py-3 border-b border-gray-700">Descripcion</th>
             <th className="px-4 py-3 border-b border-gray-700">Stock</th>
             <th className="px-4 py-3 border-b border-gray-700">Acciones</th>
           </tr>
@@ -73,7 +73,7 @@ function TableProductList() {
               <td className="px-4 py-3 border-b border-gray-700">
                 {product?.category?.name}
               </td>
-              <td>
+              <td className="max-w-[200px] truncate">
                 {editingId === product._id ? (
                   <input
                     className="bg-gray-700 p-1 rounded w-full"
