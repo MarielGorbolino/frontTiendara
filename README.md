@@ -1,12 +1,143 @@
-# React + Vite
+# Proyecto de Programación Web - Tiendara
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción
+Esta es una aplicación web desarrollada como trabajo práctico integrador en el marco de la asignatura de Programación Web.  
+La aplicación es una SPA (Single Page Application) construida en **React** y permite realizar un CRUD completo sobre dos entidades principales: **Productos** y **Categorías**, junto con la gestión de usuarios y carrito de compras.
 
-Currently, two official plugins are available:
+Permite:
+- Visualizar productos y categorías.
+- Filtrar y buscar productos.
+- Gestión de carrito de compras.
+- Registro y autenticación de usuarios.
+- Integración con pagos mediante Stripe.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Funcionalidades Principales
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Autenticación**
+   - Registro de usuarios con validaciones.
+   - Login con persistencia de sesión.
+   - Control de roles de usuario (`user` y `admin`).
+
+2. **Módulo ABMC (Alta, Baja, Modificación, Consulta)**
+   - Productos:
+     - Listado con filtros, búsqueda y paginación.
+     - Crear, actualizar y eliminar productos.
+     - Visualización de detalle de producto.
+   - Categorías:
+     - Listado y creación de categorías.
+     - Actualización parcial y eliminación.
+
+3. **Navegación SPA**
+   - Ruteo dinámico con React Router DOM.
+   - Navegación entre páginas: Home, Productos, Detalle, Carrito, Checkout, Login, Register, Dashboard.
+
+4. **Uso de Hooks**
+   - Contextos para autenticación (`AuthContext`) y carrito (`CartContext`).
+   - Hooks personalizados para consumir la API: `useProducts`, `useCategories`, `useCart`, `useRegister`, `useAuth`.
+
+---
+
+## Tecnologías Utilizadas
+
+- **React** 19
+- **React Router DOM** 7
+- **TailwindCSS** 4
+- **SweetAlert2** para notificaciones.
+- **Stripe** para integración de pagos.
+- **Lucide React** para íconos.
+- **dotenv-cli** para variables de entorno.
+- Hosting gratuito: Despliegue en **Netlify**
+- Control de versiones: **Git**.
+
+---
+
+## Estructura del Proyecto
+
+![Estructura de directorios](./src/assets/ElectronicC.jpg)
+
+```
+src/
+├─ assets/
+│  └─ ElectronicC.jpg
+├─ components/
+├─ hooks/
+│  ├─ AuthContext.jsx
+│  ├─ AuthProvider.jsx
+│  ├─ CartContext.jsx
+│  ├─ CartProvider.jsx
+│  ├─ useApi.jsx
+│  ├─ useAuth.jsx
+│  ├─ useCart.jsx
+│  ├─ useCategories.jsx
+│  ├─ useProducts.jsx
+│  └─ useRegister.jsx
+├─ pages/
+│  ├─ Cart.jsx
+│  ├─ Category.jsx
+│  ├─ Categorys.jsx
+│  ├─ Checkout.jsx
+│  ├─ Dashboard.jsx
+│  ├─ ErrorPay.jsx
+│  ├─ Home.jsx
+│  ├─ Login.jsx
+│  ├─ ProductDetail.jsx
+│  ├─ Products.jsx
+│  ├─ Register.jsx
+│  └─ SuccessPay.jsx
+├─ App.jsx
+├─ index.css
+└─ main.jsx
+```
+
+---
+
+## Instrucciones de Uso
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/MarielGorbolino/frontTiendara.git
+```
+
+### 2. Instalar dependencias
+```bash
+npm install
+```
+
+### 3. Configurar variables de entorno
+Crear un archivo `.env.dev` o `.env.prod` con las variables necesarias:
+```
+VITE_URL_BACK=http://localhost:3008
+VITE_STRIPE_SECRET=pk_test_51SXLL0JVjF1xIP00jrK5mfEYMakoWrbSB7xIu624hLHQI1YAZF1cdbV0xflJsmGDCWLGQBbQqbZopS6hqAxL2igC00xFZFymks
+```
+
+### 4. Iniciar el servidor de desarrollo
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173` (por defecto Vite).
+
+---
+
+## Imágenes de la aplicación
+
+---
+
+
+## Próximas Funcionalidades (Versión 2)
+
+1. **Rol de Super Usuario**
+    - Capacidad para eliminar o modificar categorías, independientemente de los productos asociados.
+    - Gestión avanzada de usuarios y control total del sitio.
+
+2. **Perfil de Usuario**
+    - Visualización de información personal.
+    - Historial de compras y productos adquiridos.
+    - Posibilidad de actualizar datos de contacto y preferencias.
+
+---
+
+## Contribuidores
+- Mariel Gorbolino

@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductoList";
-import useProducts from "../hooks/useProducts";
-
+import { useApi } from "../hooks/useApi";
+import Swal from "sweetalert2";
+import Paginado from "../components/Paginado";
 function Products() {
   const { category } = useParams();
-  const { fetchProductsFilter, products } = useProducts();
+  const [products, setProducts] = useState();
 
   const [loading, setLoading] = useState(true);
   const [showMessage, setShowMessage] = useState(false);
-
   const [sort, setSort] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const { request } = useApi();
 
   function handleSearchSubmit() {
     setSearch(searchInput);
@@ -28,10 +29,21 @@ function Products() {
 
   async function fetchProducts() {
     setLoading(true);
-    fetchProductsFilter(search, sort, page, pageSize);
-    setTotalPages(products.totalPages || 1);
-    setShowMessage(!products.data || products.data.length === 0);
-    setLoading(false);
+    
+    try {
+      const response = await request(`/api/products/filter?search=${search}&sort=${sort}&page=${page}&limit=${pageSize}`);
+      setProducts(response.data);
+      setTotalPages(response?.totalPages);
+      setShowMessage(!products || products.length === 0);
+      setLoading(false);
+    } catch (e) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al obtener los productos",
+      });
+    }
+  
   }
 
   return (
@@ -88,28 +100,9 @@ function Products() {
       ) : products.length > 0 ? (
         <>
           <ProductList products={products} />
-
-          <div className="flex justify-center items-center gap-4 mt-10">
-            <button
-              className="px-4 py-2 bg-gray-900 text-white rounded disabled:opacity-40"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              ⬅ Anterior
-            </button>
-
-            <span className="text-white text-lg">
-              Página {page} de {totalPages}
-            </span>
-
-            <button
-              className="px-4 py-2 bg-gray-900 text-white rounded disabled:opacity-40"
-              disabled={page === totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              Siguiente ➡
-            </button>
-          </div>
+          <Paginado page={page}
+           totalPages={totalPages} 
+           setPage={setPage} />
         </>
       ) : showMessage ? (
         <div className="bg-yellow-200 border border-yellow-400 text-yellow-800 px-6 py-4 rounded shadow text-center">

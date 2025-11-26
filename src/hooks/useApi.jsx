@@ -1,10 +1,12 @@
 import Swal from "sweetalert2";
 import { useAuth } from "../hooks/useAuth";
+const apiBaseUrl = import.meta.env.VITE_URL_BACK;
 
 export function useApi() {
   const { accessToken, refreshAccessToken } = useAuth();
 
-  const request = async (url, method = "GET", body = null, retry = 0) => {
+  const request = async (ruta, method = "GET", body = null, retry = 0) => {
+    const url = apiBaseUrl + ruta;
     try {
       const options = {
         method,

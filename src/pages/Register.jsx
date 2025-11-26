@@ -110,7 +110,7 @@ function Register() {
     if (result) {
       Swal.fire({
         icon: "success",
-        title: "Producto creado",
+        title: "Usuario registrado",
         text: "Usuario registrado correctamente",
         confirmButtonColor: "#10b981",
       });

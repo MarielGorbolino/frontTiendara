@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useApi } from "./useApi";
 
 export function useRegister() {
   const [isLoading, setIsLoading] = useState(false);
+  const { request } = useApi();
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
@@ -10,25 +12,15 @@ export function useRegister() {
     setError(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_URL_BACK;
 
-      const response = await fetch(`${apiBaseUrl}/api/user/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
+      const response = await request("/api/user/register", "POST", formData);
+      if (response.code !== 201) {
         const errorJson = await response.json();
         throw new Error(errorJson.mensaje || "Error en el registro");
       }
 
-      const json = await response.json();
-      setData(json);
-
-      return json;
+      setData(response.data);
+      return response.data;
 
     } catch (error) {
       setError(error.message);

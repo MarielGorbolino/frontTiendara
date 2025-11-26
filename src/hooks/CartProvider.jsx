@@ -133,12 +133,7 @@ function CartProvider({ children }) {
   }, [user?.id, peticionesCart, urlapi]);
 
   async function deleteProductCart(idProducto) {
-    await peticionesCart(
-      urlapi + "/api/cart",
-      "DELETE",
-      { idProducto },
-      idProducto
-    );
+    await peticionesCart(urlapi + "/api/cart/clear", "POST", {idProducto}, "clear");
   }
 
   async function removeProductCart(idProducto) {
@@ -150,14 +145,14 @@ function CartProvider({ children }) {
     );
   }
 
-  async function updateProductCart(idProducto) {
+  async function updateProductCart(idProducto, message = true) {
     const response = await peticionesCart(
       urlapi + "/api/cart",
       "POST",
       { idProducto },
       idProducto
     );
-    if (response.ok) {
+    if (response.ok && message) {
       Swal.fire({
         icon: "success",
         title: "success",
@@ -167,7 +162,7 @@ function CartProvider({ children }) {
   }
 
   async function clearCart() {
-    await peticionesCart(urlapi + "/api/cart/clear", "POST", null, "clear");
+    await peticionesCart(urlapi + "/api/cart", "DELETE");
   }
 
 
