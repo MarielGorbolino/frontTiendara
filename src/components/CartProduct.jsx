@@ -48,7 +48,7 @@ const isLoading = loadingId === product._id;
             {item.quantity}
           </span>
           <button
-            onClick={() => updateProductCart(product._id)}
+            onClick={() => updateProductCart(product._id, false)}
             disabled={isLoading}
             className="bg-gray-700 disabled:bg-gray-600 disabled:opacity-50 text-white p-1 rounded-full"
           >

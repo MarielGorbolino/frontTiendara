@@ -6,7 +6,6 @@ import { useAuth } from "./useAuth";
 	const [categories, setCategories] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const apiBaseUrl = import.meta.env.VITE_URL_BACK;
 	const { request } = useApi();
     const { accessToken } = useAuth();
   
@@ -15,14 +14,14 @@ import { useAuth } from "./useAuth";
 	  setError(null);
   
 	  try {
-	  const res = await request(apiBaseUrl + "/api/category")
+	  const res = await request("/api/category")
 		setCategories(res.data);
 	  } catch (e) {
 		setError(e.message);
 	  } finally {
 		setIsLoading(false);
 	  }
-	}, [accessToken, apiBaseUrl]);
+	}, [accessToken]);
   
 	useEffect(() => {
 	  fetchCategories();
