@@ -28,7 +28,16 @@ function ProductCard({ product }) {
             alt={product.title}
           />
         </div>
-        <p className="text-gray-300 text-justify py-2">{`Precio: $${product.price.toLocaleString("es-AR")}`}</p>
+        <p className="text-gray-300 text-justify py-2">{`Precio: $${product.price.toLocaleString(
+          "es-AR"
+        )}`}</p>
+        <p
+          className={`mb-2 ${
+            product.stock > 0 ? "text-gray-300" : "text-red-500 font-bold"
+          }`}
+        >
+          Stock: {product.stock > 0 ? product.stock : "AGOTADO"}
+        </p>
         <p>{`Envio: ${
           product.price > PRODUCT_PRICE
             ? "GRATIS"
@@ -41,7 +50,7 @@ function ProductCard({ product }) {
           disabled={!user?.id || product.stock === 0}
           title={!user?.id ? "Debes iniciar sesión para agregar productos" : ""}
           className={`px-4 py-2 rounded ${
-            user?.id
+            user?.id && product.stock > 0
               ? "bg-emerald-700 hover:bg-emerald-600"
               : "bg-gray-500 cursor-not-allowed"
           }`}

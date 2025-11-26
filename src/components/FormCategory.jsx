@@ -1,158 +1,221 @@
-import { useNavigate } from "react-router-dom"
-import FormInput from "./FormInput"
-import { useState } from "react"
-import { PencilLine,DollarSign, ImageUp } from "lucide-react"
-import { useAuth } from "../hooks/useAuth"
-import Swal from "sweetalert2"
+import { useNavigate } from "react-router-dom";
+import FormInput from "./FormInput";
+import { useState } from "react";
+import { PencilLine, ImageUp } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import Swal from "sweetalert2";
 
-function FormCategory(){
-    const navigate = useNavigate()
-      const { refreshAccessToken, logout, accessToken } = useAuth();
-      const apiBaseUrl =
-			import.meta.env.VITE_URL_BACK;
+function FormCategory() {
+  const navigate = useNavigate();
+  const { refreshAccessToken, logout, accessToken } = useAuth();
+  const apiBaseUrl = import.meta.env.VITE_URL_BACK;
 
-    const [formData, setFormData] = useState({
-        name:"",
-        description:"",
-        image:"",
-    })
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: "",
+  });
 
-    function navigateToHome(){
-        navigate(-1)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  function navigateToHome() {
+    navigate(-1);
+  }
+
+  function validateField(name, value) {
+    let errorMsg = "";
+
+    if (name === "name" && value !== "" && value.trim().length < 3) {
+      errorMsg = "El título debe tener al menos 3 caracteres";
     }
 
-    async function handleImageChange(e) {
-        const file = e.target.files?.[0];
-              if (!file) return;
-
-      const maxSizeMB = 1;
-      const maxSizeBytes = maxSizeMB * 1024 * 1024;
-
-      if (file.size > maxSizeBytes) {
-        alert(`La imagen supera el tamaño máximo de ${maxSizeMB} MB`);
-        return;
-      }
-            const reader = new FileReader();
-            reader.onload = () => {
-                const base64 = reader.result;
-                setFormData({ ...formData, image: base64 });
-            };
-            reader.readAsDataURL(file);
-        
+    if (name === "description" && value !== "" && value.trim().length < 5) {
+      errorMsg = "La descripción debe tener al menos 5 caracteres";
     }
+
+    setErrors((prev) => ({ ...prev, [name]: errorMsg }));
+  }
+
+  async function handleImageChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const maxSizeMB = 1;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+    if (file.size > maxSizeBytes) {
+      alert(`La imagen supera el tamaño máximo de ${maxSizeMB} MB`);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result;
+
+      setFormData((prev) => ({
+        ...prev,
+        image: base64,
+      }));
+
+      e.target.value = null;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
   async function saveCategory(e) {
     e.preventDefault();
 
     try {
-       const respuesta = await fetch(`${apiBaseUrl}/api/category`,{
-          method:"POST",
-          body:JSON.stringify(formData),
-          headers:{
-            "Content-Type":"application/json",
-				      authorization: `${accessToken}`,
+      setIsSubmitting(true);
 
-          }
-        })
+      let tokenToUse = accessToken;
+      let respuesta = await fetch(`${apiBaseUrl}/api/category`, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${tokenToUse}`,
+        },
+      });
 
       if (respuesta.status === 401) {
-
         const refreshResult = await refreshAccessToken();
 
-        if (refreshResult && refreshResult.accessToken) {
-            const respuesta = await fetch(`${apiBaseUrl}/api/category`,{
-            method:"POST",
-            body:JSON.stringify(formData),
-            headers:{
-              "Content-Type":"application/json",
-                authorization: `${refreshResult.accessToken}`,
-
-            }
-        })
-
-          if (respuesta.status === 401) {
-            logout();
-            navigate("/login");
-            return;
-          }
-        } else {
+        if (!refreshResult || !refreshResult.accessToken) {
           logout();
           navigate("/login");
+          setIsSubmitting(false);
+          return;
+        }
+
+        tokenToUse = refreshResult.accessToken;
+
+        respuesta = await fetch(`${apiBaseUrl}/api/category`, {
+          method: "POST",
+          body: JSON.stringify(formData),
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `${tokenToUse}`,
+          },
+        });
+
+        if (respuesta.status === 401) {
+          logout();
+          navigate("/login");
+          setIsSubmitting(false);
           return;
         }
       }
 
       if (!respuesta.ok) {
+        setIsSubmitting(false);
         throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
       }
 
       await respuesta.json();
+
       setFormData({
-        title: "",
+        name: "",
         description: "",
         image: "",
       });
-    } catch (error) {
+
+      setIsSubmitting(false);
+
       Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Error al crear producto:",
-                  });
+        icon: "success",
+        title: "Success",
+        text: "Categoría guardada correctamente",
+      });
+    } catch (error) {
+      setIsSubmitting(false);
+      setFormData({
+        name: "",
+        description: "",
+        image: "",
+      });
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al crear categoría",
+      });
     }
   }
 
-    return (
+  return (
     <form
-          onSubmit={saveCategory}
-          className="space-y-5 flex flex-col justify-center px-8 pb-8"
+      onSubmit={saveCategory}
+      className="space-y-5 flex flex-col justify-center px-8 pb-8"
+    >
+      <FormInput
+        icon={<PencilLine size={18} />}
+        labelText={"Nombre *"}
+        inputType={"text"}
+        placeholder={"Electronics"}
+        value={formData.name}
+        onChangeFn={(e) => {
+          setFormData({ ...formData, name: e.target.value });
+          validateField("name", e.target.value);
+        }}
+        error={errors.name}
+      />
+
+      <FormInput
+        icon={<PencilLine size={18} />}
+        labelText={"Descripción *"}
+        inputType={"text"}
+        placeholder={"49 INCH SUPER ULT..."}
+        value={formData.description}
+        onChangeFn={(e) => {
+          setFormData({ ...formData, description: e.target.value });
+          validateField("description", e.target.value);
+        }}
+        error={errors.description}
+      />
+
+      <FormInput
+        icon={<ImageUp size={18} />}
+        labelText={"Imagen *"}
+        inputType={"file"}
+        isRequired={false}
+        onChangeFn={handleImageChange}
+      />
+
+      {/* Preview de imagen */}
+      {formData.image && (
+        <img
+          src={formData.image}
+          className="w-32 h-32 object-cover rounded-md mx-auto border border-gray-600"
+        />
+      )}
+
+      <div className="flex flex-row justify-center gap-4 pt-6">
+        <button
+          onClick={navigateToHome}
+          type="button"
+          className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center"
         >
-          <FormInput
-            icon={<PencilLine size={18} />}
-            labelText={"Name"}
-            inputType={"text"}
-            placeholder={"Electronics"}
-            value={formData.name}
-            onChangeFn={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-          />
+          Volver
+        </button>
 
-          <FormInput
-            icon={<PencilLine size={18} />}
-            labelText={"Description"}
-            inputType={"text"}
-            placeholder={"49 INCH SUPER ULT..."}
-            value={formData.description}
-            onChangeFn={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-          />
-
-          <FormInput
-            icon={<ImageUp size={18} />}
-            labelText={"Image"}
-            inputType={"file"}
-            value={formData.image}
-            isRequired={false}
-            onChangeFn={handleImageChange}
-          />
-
-
-          <div className="flex flex-row justify-center gap-4 pt-6">
-            <button
-              onClick={() => navigateToHome()}
-              className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center"
-            >
-              Volver
-            </button>
-            <button
-              type="submit"
-              className="bg-emerald-700 hover:bg-emerald-600 text-white px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center"
-            >
-              Enviar
-            </button>
-          </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center text-white
+            ${
+              isSubmitting
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-emerald-700 hover:bg-emerald-600"
+            }`}
+        >
+          {isSubmitting ? "Enviando..." : "Enviar"}
+        </button>
+      </div>
     </form>
-    )
+  );
 }
 
-export default FormCategory
+export default FormCategory;

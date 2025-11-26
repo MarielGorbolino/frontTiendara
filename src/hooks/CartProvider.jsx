@@ -21,7 +21,7 @@ function CartProvider({ children }) {
 
     try {
       const total = Math.round(getTotal() * 100);
-      const response = await fetch(`${urlapi}/create-payment-intent`, {
+      const response = await fetch(`${urlapi}/api/cart/create-payment-intent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,6 +107,7 @@ function CartProvider({ children }) {
         if (response.ok) {
           const resJson = await response.json();
           setCart(resJson.data);
+          return response;
         }
       } catch (error) {
         Swal.fire({
@@ -150,24 +151,38 @@ function CartProvider({ children }) {
   }
 
   async function updateProductCart(idProducto) {
-    await peticionesCart(
+    const response = await peticionesCart(
       urlapi + "/api/cart",
       "POST",
       { idProducto },
       idProducto
     );
+    console.log("Agregando al carrito:", response);
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "success",
+        text: "Producto agregado al carrito correctamente",
+      });
+    }
   }
 
   async function clearCart() {
     await peticionesCart(urlapi + "/api/cart/clear", "POST", null, "clear");
   }
 
+
+  async function payCart() {
+    await peticionesCart(urlapi + "/api/cart/pay", "POST", null, "pay");
+  }
+
+
   function getTotal() {
     if (!cart || !cart.detalle) return 0;
     return cart.detalle.reduce(
       (tot, item) => tot + item.quantity * item.price,
       0
-    );
+    ).toLocaleString("es-AR");
   }
 
   function getTotalItems() {
@@ -187,6 +202,7 @@ function CartProvider({ children }) {
     crearIntentoPago,
     loadingId,
     loadingCart,
+    payCart
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

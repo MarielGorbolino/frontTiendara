@@ -50,7 +50,6 @@ function ProductDetail() {
         />
 
         <div className="text-white flex-1">
-          <p className="text-gray-300 mb-4">{product.description}</p>
           <p className="text-emerald-400 text-2xl font-bold mb-4">
             ${product.price.toLocaleString("es-AR")}
           </p>
@@ -86,7 +85,7 @@ function ProductDetail() {
             } a AMBA`}
           </p>
           <p className="text-gray-300 mb-2">
-            Stock: {product.stock > 0 ? product.stock : "Agotado"}
+            Stock: {product.stock > 0 ? product.stock : "AGOTADO"}
           </p>
           <p className="mb-4">
             <span className="text-gray-300">
@@ -99,22 +98,25 @@ function ProductDetail() {
           <button
             onClick={async () => {
               await updateProductCart(product._id);
-              await fetchProduct();
             }}
             disabled={!user?.id || product.stock === 0}
             title={
               !user?.id ? "Debes iniciar sesión para agregar productos" : ""
             }
             className={`px-4 py-2 rounded ${
-              user?.id
-                ? "bg-emerald-700 hover:bg-emerald-600"
-                : "bg-gray-500 cursor-not-allowed"
+              !user?.id || product.stock === 0
+                ? "bg-gray-500 cursor-not-allowed" : "bg-emerald-700 hover:bg-emerald-600"
             }`}
           >
             Agregar al carrito
           </button>
         </div>
       </div>
+        <div className="max-w-5xl mx-auto mt-8 bg-gray-800 p-6 rounded-lg text-center">
+    <p className="text-gray-300 text-lg">
+      {product.description || "Sin descripción disponible"}
+    </p>
+  </div>
       {product.images && product.images.length > 1 && (
         <div className="max-w-5xl mx-auto mt-12">
           <h2 className="text-white text-2xl font-semibold mb-4 text-center">

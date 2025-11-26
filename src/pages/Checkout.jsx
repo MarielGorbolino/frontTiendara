@@ -16,7 +16,7 @@ const Checkout = () => {
   const {
     cart,
     getTotal,
-    clearCart,
+    payCart,
     getTotalItems,
     intentoPago,
     crearIntentoPago,
@@ -95,9 +95,10 @@ const Checkout = () => {
               <StripeForm
                 paymentIntent={intentoPago}
                 getTotal={getTotal}
-                clearCart={clearCart}
+                payCart={payCart}
                 shippingInfo={shippingInfo}
                 isShippingValid={isShippingValid}
+                crearIntentoPago={crearIntentoPago}
               />
             </div>
           </div>

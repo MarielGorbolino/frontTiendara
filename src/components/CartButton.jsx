@@ -7,7 +7,7 @@ function CartButton ({isLogin}){
     if(isLogin){
         return(<Link to={"/cart"} className="relative text-gray-300 hover:text-blue-400">
             <ShoppingCart size={18} className="inline-block mr-1"/>
-            <span>Cart</span>
+            <span>Carrito</span>
             {
                 getTotalItems()>= 0 && (
                     <span className="absolute -top-2 -left-2 bg-emerald-700 text-white rounded-full px-2 py-0.5 text-xs">{getTotalItems()}</span>

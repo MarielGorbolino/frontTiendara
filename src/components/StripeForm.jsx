@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { CreditCard, Shield } from "lucide-react";
 import Swal from "sweetalert2";
 
-const StripeForm = ({ paymentIntent, getTotal, shippingInfo, clearCart, isShippingValid }) => {
+const StripeForm = ({ paymentIntent, getTotal, shippingInfo, payCart, isShippingValid, crearIntentoPago}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -48,23 +48,19 @@ const StripeForm = ({ paymentIntent, getTotal, shippingInfo, clearCart, isShippi
           },
         },
       });
+      crearIntentoPago();
 
       if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: `Error en el pago: ${error.message}`,
-        });
         navigate("/errorPay");
       } else {
+        payCart();
         navigate("/successPay");
-        clearCart();
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: `Error en el pago: ${error.message}`,
+        text: `${error.message}`,
       });
       navigate("/errorPay");
     } finally {

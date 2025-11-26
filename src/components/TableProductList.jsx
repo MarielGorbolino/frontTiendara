@@ -77,16 +77,16 @@ function TableProductList() {
                 {editingId === product._id ? (
                   <input
                     className="bg-gray-700 p-1 rounded w-full"
-                    value={editValues.desciption}
+                    value={editValues.description}
                     onChange={(e) =>
                       setEditValues({
                         ...editValues,
-                        desciption: e.target.value,
+                        description: e.target.value,
                       })
                     }
                   />
                 ) : (
-                  product.desciption
+                  product.description
                 )}
               </td>
 
@@ -142,7 +142,7 @@ function TableProductList() {
                         title: product.title,
                         price: product.price,
                         category: product.category?._id,
-                        desciption: product.desciption,
+                        description: product.description,
                         stock: product.stock,
                       });
                     }}

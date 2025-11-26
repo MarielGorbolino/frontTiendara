@@ -4,16 +4,16 @@ import { PlusCircle,ShoppingBasket } from "lucide-react"
 const tabs =[
     {
         id:1,
-        label:"Create Product",
+        label:"Crear Producto",
         icon:PlusCircle
     },{
         id:2,
-        label:"Product List",
+        label:"Lista de Product",
         icon:ShoppingBasket
     },
     {
         id:3,
-        label:"Create Category",
+        label:"Crear Categoria",
         icon:PlusCircle
     }
 ]

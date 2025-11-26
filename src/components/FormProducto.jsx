@@ -56,32 +56,32 @@ function FormProducto() {
     navigate(-1);
   }
 
-  async function handleImageChange(e) {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
+ async function handleImageChange(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
 
-    const maxSizeMB = 1;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+  const maxSizeMB = 1;
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-    const base64Images = [];
+  const base64Images = [];
 
-    for (const file of files) {
-      if (file.size > maxSizeBytes) {
-        alert(
-          `La imagen ${file.name} supera el tamaño máximo de ${maxSizeMB} MB`
-        );
-        continue;
-      }
-
-      const base64 = await fileToBase64(file);
-      base64Images.push(base64);
+  for (const file of files) {
+    if (file.size > maxSizeBytes) {
+      alert(`La imagen ${file.name} supera el tamaño máximo de ${maxSizeMB} MB`);
+      continue;
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ...base64Images],
-    }));
+    const base64 = await fileToBase64(file);
+    base64Images.push(base64);
   }
+
+  setFormData((prev) => ({
+    ...prev,
+    images: [...prev.images, ...base64Images],
+  }));
+
+  e.target.value = null;
+}
 
   function fileToBase64(file) {
     return new Promise((resolve) => {
@@ -192,7 +192,7 @@ function FormProducto() {
         price: "",
         stock: "",
         category: "",
-        id: ""
+        id: "",
       });
     } catch (error) {
       Swal.fire({
@@ -205,6 +205,18 @@ function FormProducto() {
     setIsSubmitting(false);
   }
 
+  function hasErrors() {
+     const errorEmpty =
+      !formData.title ||
+      !formData.description ||
+      !formData.price ||
+      !formData.category ||
+      !formData.stock ||
+      formData.images?.length == 0
+      
+    return errorEmpty || errors && Object.values(errors).some((err) => err && err.length > 0);
+  }
+
   return (
     <form
       onSubmit={saveProduct}
@@ -212,7 +224,7 @@ function FormProducto() {
     >
       <FormInput
         icon={<PencilLine size={18} />}
-        labelText={"Title"}
+        labelText={"Titulo *"}
         inputType={"text"}
         placeholder={"Mens Casual Slim Fit"}
         value={formData.title}
@@ -220,12 +232,12 @@ function FormProducto() {
           setFormData({ ...formData, title: e.target.value });
           validateField("title", e.target.value);
         }}
+        error={errors.title}
       />
-      {errors.title && <p className="text-red-400 text-sm">{errors.title}</p>}
 
       <FormInput
         icon={<PencilLine size={18} />}
-        labelText={"Description"}
+        labelText={"Descripcion *"}
         inputType={"text"}
         placeholder={
           "49 INCH SUPER ULTRAWIDE 32:9 CURVED GAMING MONITOR with dual 27 inch screen side ..."
@@ -235,14 +247,12 @@ function FormProducto() {
           setFormData({ ...formData, description: e.target.value });
           validateField("description", e.target.value);
         }}
+        error={errors.description}
       />
-      {errors.description && (
-        <p className="text-red-400 text-sm">{errors.description}</p>
-      )}
 
       <FormInput
         icon={<DollarSign size={18} />}
-        labelText={"Price"}
+        labelText={"Precio *"}
         inputType={"number"}
         placeholder={"19.99"}
         value={formData.price}
@@ -250,12 +260,12 @@ function FormProducto() {
           setFormData({ ...formData, price: e.target.value });
           validateField("price", e.target.value);
         }}
+        error={errors.price}
       />
-      {errors.price && <p className="text-red-400 text-sm">{errors.price}</p>}
 
       <FormInput
         icon={<DollarSign size={18} />}
-        labelText={"Cantidad en Stock"}
+        labelText={"Cantidad en Stock *"}
         inputType={"number"}
         placeholder={"2"}
         value={formData.stock}
@@ -263,12 +273,12 @@ function FormProducto() {
           setFormData({ ...formData, stock: e.target.value });
           validateField("stock", e.target.value);
         }}
+        error={errors.stock}
       />
-      {errors.stock && <p className="text-red-400 text-sm">{errors.stock}</p>}
 
       <FormInput
         icon={<ImageUp size={18} />}
-        labelText={"Image"}
+        labelText={"Imagenes *"}
         inputType={"file"}
         value={formData.images}
         isRequired={false}
@@ -300,7 +310,7 @@ function FormProducto() {
       <div className="flex flex-col text-gray-300 w-full">
         <div className="flex flex-row justify-start items-center gap-2 mb-2">
           <DollarSign size={18} />
-          <label className="text-sm font-medium">{"Categoria"}</label>
+          <label className="text-sm font-medium">{"Categoria *"}</label>
         </div>
 
         <select
@@ -312,7 +322,7 @@ function FormProducto() {
           }
           className="text-white bg-gray-800 border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
         >
-          <option value="">Select category</option>
+          <option value="">Seleccionar categoria</option>
           {categories.map((cat) => (
             <option value={cat._id} key={cat._id}>
               {cat.name}
@@ -320,7 +330,7 @@ function FormProducto() {
           ))}
         </select>
         {errors.category && (
-          <p className="text-red-400 text-sm">{errors.category}</p>
+          <p className="text-red-500 text-sm">{errors.category}</p>
         )}
       </div>
 
@@ -335,15 +345,15 @@ function FormProducto() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || hasErrors()}
           className={`px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center text-white
 						${
-              isSubmitting
+              isSubmitting || hasErrors()
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-emerald-700 hover:bg-emerald-600"
             }`}
         >
-          {isSubmitting ? "Enviando..." : "Enviar"}
+          {isSubmitting ? "Guardando..." : "Guardar"}
         </button>
       </div>
     </form>
