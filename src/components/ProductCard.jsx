@@ -77,7 +77,7 @@ function ProductCard({ product, isCategoryPage }) {
               : "bg-emerald-700 hover:bg-emerald-600"
           }`}
         >
-          Agregar al carrito
+          {loading ? "Agregando al carrito..." : "Agregar al carrito"}
         </button>
       </div>
     </div>
