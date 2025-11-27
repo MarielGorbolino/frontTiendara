@@ -87,6 +87,7 @@ export default function AuthProvider({ children }) {
 
   const refreshAccessToken = async () => {
     try {
+      setIsLoading(true);
       if (!refreshToken) {
         throw new Error("no hay refresh token disponble");
       }
@@ -118,6 +119,7 @@ export default function AuthProvider({ children }) {
       localStorage.setItem("accessToken", newAccessToken);
       localStorage.setItem("refreshToken", newRefreshToken);
       localStorage.setItem("user", JSON.stringify(userData));
+      setIsLoading(false);
 
       return {
         accessToken: newAccessToken,

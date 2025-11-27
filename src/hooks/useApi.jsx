@@ -23,22 +23,18 @@ export function useApi() {
       if (res.status === 403 && retry === 0) {
         const refreshed = await refreshAccessToken();
 
-        if (refreshed?.success) {
+        if (refreshed?.accessToken) {
           return request(ruta, method, body, retry + 1);
+        } else {
+          Swal.fire({
+            icon: "error",
+            text: "Sesión expirada",
+          });
+          return null;
         }
-
-        Swal.fire({
-          icon: "error",
-          text: "Sesión expirada",
-        });
-        return null;
       }
 
       if (!res.ok) {
-        // Swal.fire({
-        //   icon: "error",
-        //   text: `Error: ${method} ${url}`,
-        // });
         return null;
       }
 

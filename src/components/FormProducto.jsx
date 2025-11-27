@@ -155,7 +155,7 @@ function FormProducto() {
             refreshResult.accessToken
           );
 
-          if (respuesta.status === 403) {
+          if (respuesta.status === 401) {
             Swal.fire({
               icon: "error",
               text: "Sesión expirada, por favor inicia sesión nuevamente",

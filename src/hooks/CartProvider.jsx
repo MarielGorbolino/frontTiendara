@@ -83,7 +83,7 @@ function CartProvider({ children }) {
 
         if (response.status === 403 && retryCount === 0) {
           const refreshResult = await refreshAccessToken();
-          if (refreshResult?.success) {
+          if (refreshResult?.accessToken) {
             return peticionesCart(
               url,
               metodo,
