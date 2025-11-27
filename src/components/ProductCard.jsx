@@ -12,12 +12,6 @@ function ProductCard({ product, isCategoryPage }) {
   const { updateProductCart } = useCart();
   useEffect(() => {}, []);
 
-  function addtocart() {
-    setLoading(true);
-    updateProductCart(product._id);
-    setLoading(false);
-  }
-
   return (
     <div className="bg-gray-900 rounded-lg p-4">
       <Link to={"/product/" + (product._id || product.id)}>
@@ -70,7 +64,11 @@ function ProductCard({ product, isCategoryPage }) {
       </Link>
       <div className="flex justify-end mt-3">
         <button
-          onClick={addtocart}
+          onClick={async () => {
+              setLoading(true);
+              await updateProductCart(product._id);
+              setLoading(false);
+            }}
           disabled={!user?.id || product.stock === 0 || loading}
           title={!user?.id ? "Debes iniciar sesión para agregar productos" : ""}
           className={`px-4 py-2 rounded ${
