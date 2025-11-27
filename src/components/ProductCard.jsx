@@ -74,9 +74,9 @@ function ProductCard({ product, isCategoryPage }) {
           disabled={!user?.id || product.stock === 0 || loading}
           title={!user?.id ? "Debes iniciar sesión para agregar productos" : ""}
           className={`px-4 py-2 rounded ${
-            user?.id && product.stock > 0 && !loading
-              ? "bg-emerald-700 hover:bg-emerald-600"
-              : "bg-gray-500 cursor-not-allowed"
+            !user?.id || product.stock === 0 || loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-emerald-700 hover:bg-emerald-600"
           }`}
         >
           Agregar al carrito
