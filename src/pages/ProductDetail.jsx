@@ -19,7 +19,7 @@ function ProductDetail() {
 
   useEffect(() => {
     fetchProduct(id);
-  }, [id]);
+  }, [id, fetchProduct]);
 
   useEffect(() => {
     if (product?.images?.length > 0) {
@@ -33,7 +33,7 @@ function ProductDetail() {
     <div className="bg-gray-700 min-h-screen pt-30 px-4 pb-12">
       <SmartBackButton />
       <div className="text-white text-center mb-8 max-w-5xl mx-auto px-4">
-        <h1 className="text-4xl font-bold break-words whitespace-normal">
+        <h1 className="text-4xl font-bold wrap-break-word whitespace-normal">
           {product.title}
         </h1>
       </div>
@@ -112,7 +112,7 @@ function ProductDetail() {
         </div>
       </div>
       <div className="max-w-5xl mx-auto mt-8 bg-gray-800 p-6 rounded-lg text-center">
-        <p className="text-gray-300 text-lg break-words whitespace-normal">
+        <p className="text-gray-300 text-lg wrap-break-word whitespace-normal">
           {product.description || "Sin descripción disponible"}
         </p>
       </div>
