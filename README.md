@@ -123,6 +123,18 @@ La aplicación estará disponible en `http://localhost:5173` (por defecto Vite).
 
 ## Imágenes de la aplicación
 
+
+![](/public/imagen_005.png)
+![](/public/imagen_004.png)
+![](/public/imagen_006.png)
+![](/public/imagen_007.png)
+![](/public/imagen_008.png)
+![](/public/imagen_009.png)
+![](/public/imagen_010.png)
+![](/public/imagen_011.png)
+![](/public/imagen_012.png)
+![](/public/imagen_002.png)
+![](/public/imagen_003.png)
 ---
 
 
@@ -133,9 +145,8 @@ La aplicación estará disponible en `http://localhost:5173` (por defecto Vite).
     - Gestión avanzada de usuarios y control total del sitio.
 
 2. **Perfil de Usuario**
-    - Visualización de información personal.
     - Historial de compras y productos adquiridos.
-    - Posibilidad de actualizar datos de contacto y preferencias.
+    - Posibilidad de cambiar contraseña y preferencias.
 
 ---
 
