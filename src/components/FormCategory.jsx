@@ -194,7 +194,6 @@ function FormCategory() {
         onChangeFn={handleImageChange}
       />
 
-      {/* Preview de imagen */}
       {formData.image && (
         <img
           src={formData.image}

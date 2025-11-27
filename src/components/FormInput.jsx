@@ -7,7 +7,8 @@ function FormInput({
   isRequired = true,
   icon,
   name,
-  error
+  error,
+  disabled = false
 }) {
   return (
     <div className="flex flex-col text-gray-300 w-full">
@@ -24,15 +25,15 @@ function FormInput({
         value={inputType === "file" ? undefined : value}
         onChange={onChangeFn}
         required={isRequired}
-        className={`w-full px-6 py-3 bg-gray-700 rounded-md focus:outline-none 
-          focus:ring-2 ${error ? "border border-red-500 focus:ring-red-500" : "focus:ring-emerald-500"}`}
+        disabled={disabled}
         name={name}
+        className={`w-full px-6 py-3 bg-gray-700 rounded-md focus:outline-none 
+          ${disabled ? "opacity-60 cursor-not-allowed" : ""}
+          focus:ring-2 ${error ? "border border-red-500 focus:ring-red-500" : "focus:ring-emerald-500"}`}
       />
 
       {error && (
-        <span className="text-red-500 text-sm mt-1">
-          {error}
-        </span>
+        <span className="text-red-500 text-sm mt-1">{error}</span>
       )}
     </div>
   );

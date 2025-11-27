@@ -19,7 +19,7 @@ function Register() {
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
-  const { registerUser, isLoading, error: registerError } = useRegister();
+  const { registerUser, isLoading } = useRegister();
 
   const navigateToHome = () => navigate(-1);
 
@@ -214,10 +214,6 @@ function Register() {
             </button>
           </div>
         </form>
-
-        {registerError && (
-          <p className="text-center text-blue-400 pb-4">{registerError}</p>
-        )}
       </div>
     </div>
   );

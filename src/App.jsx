@@ -15,6 +15,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
 import SuccessPay from "./pages/SuccessPay";
 import ErrorPay from "./pages/ErrorPay";
+import Perfil from "./pages/Perfil";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/perfil" element={<Perfil />} />
             <Route path="/category" element={<Categorys />} />
             <Route path="/category/:category" element={<Category />} />
             <Route path="/products" element={<Products />} />

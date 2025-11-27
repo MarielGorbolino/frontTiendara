@@ -1,8 +1,5 @@
 import {
-  BadgeCheck,
-  BadgeAlert,
   Trash,
-  EyeOff,
   SquarePen,
   Save,
   Ban,

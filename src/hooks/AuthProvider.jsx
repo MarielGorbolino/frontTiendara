@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 
 export default function AuthProvider({ children }) {
+  const urlapi = import.meta.env.VITE_URL_BACK;
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [user, setUser] = useState(null);
@@ -33,7 +34,6 @@ export default function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const urlapi = import.meta.env.VITE_URL_BACK;
       const response = await fetch(`${urlapi}/api/user/login`, {
         method: "POST",
         headers: {
@@ -90,7 +90,6 @@ export default function AuthProvider({ children }) {
       if (!refreshToken) {
         throw new Error("no hay refresh token disponble");
       }
-      const urlapi = import.meta.env.VITE_URL_BACK;
       const response = await fetch(`${urlapi}/api/user/token`, {
         method: "POST",
         headers: {

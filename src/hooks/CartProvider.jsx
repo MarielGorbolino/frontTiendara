@@ -9,6 +9,7 @@ function CartProvider({ children }) {
   const [intentoPago, setIntentoPago] = useState(null);
 
   const [loadingId, setLoadingId] = useState(null);
+  const [error, setError] = useState(null);
   const [loadingCart, setLoadingCart] = useState(false);
 
   const urlapi = import.meta.env.VITE_URL_BACK;
@@ -35,6 +36,7 @@ function CartProvider({ children }) {
         setIntentoPago({ clientSecret, amount: total || 1000 });
       }
     } catch (error) {
+      setError(error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -110,11 +112,7 @@ function CartProvider({ children }) {
           return response;
         }
       } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Error de conexión",
-        });
+        setError(error);
       } finally {
         setLoadingId(null);
       }
@@ -196,7 +194,8 @@ function CartProvider({ children }) {
     crearIntentoPago,
     loadingId,
     loadingCart,
-    payCart
+    payCart,
+    error
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

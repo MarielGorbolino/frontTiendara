@@ -24,7 +24,7 @@ export function useApi() {
         const refreshed = await refreshAccessToken();
 
         if (refreshed?.success) {
-          return request(url, method, body, retry + 1);
+          return request(ruta, method, body, retry + 1);
         }
 
         Swal.fire({
