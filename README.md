@@ -55,41 +55,8 @@ Permite:
 
 ## Estructura del Proyecto
 
-![Estructura de directorios](./src/assets/ElectronicC.jpg)
-
-```
-src/
-├─ assets/
-│  └─ ElectronicC.jpg
-├─ components/
-├─ hooks/
-│  ├─ AuthContext.jsx
-│  ├─ AuthProvider.jsx
-│  ├─ CartContext.jsx
-│  ├─ CartProvider.jsx
-│  ├─ useApi.jsx
-│  ├─ useAuth.jsx
-│  ├─ useCart.jsx
-│  ├─ useCategories.jsx
-│  ├─ useProducts.jsx
-│  └─ useRegister.jsx
-├─ pages/
-│  ├─ Cart.jsx
-│  ├─ Category.jsx
-│  ├─ Categorys.jsx
-│  ├─ Checkout.jsx
-│  ├─ Dashboard.jsx
-│  ├─ ErrorPay.jsx
-│  ├─ Home.jsx
-│  ├─ Login.jsx
-│  ├─ ProductDetail.jsx
-│  ├─ Products.jsx
-│  ├─ Register.jsx
-│  └─ SuccessPay.jsx
-├─ App.jsx
-├─ index.css
-└─ main.jsx
-```
+![Estructura de directorios](/public/estructura_001.png)
+![Estructura de directorios](/public/estructura_002.png)
 
 ---
 
@@ -115,6 +82,11 @@ VITE_STRIPE_SECRET=pk_test_51SXLL0JVjF1xIP00jrK5mfEYMakoWrbSB7xIu624hLHQI1YAZF1c
 ### 4. Iniciar el servidor de desarrollo
 ```bash
 npm run dev
+```
+o si se creo el .env.prod
+
+```bash
+nom run prod
 ```
 
 La aplicación estará disponible en `http://localhost:5173` (por defecto Vite).
