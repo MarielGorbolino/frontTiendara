@@ -88,7 +88,7 @@ function FormCategory() {
         },
       });
 
-      if (respuesta.status === 401) {
+      if (respuesta.status === 403) {
         const refreshResult = await refreshAccessToken();
 
         if (!refreshResult || !refreshResult.accessToken) {
@@ -109,7 +109,7 @@ function FormCategory() {
           },
         });
 
-        if (respuesta.status === 401) {
+        if (respuesta.status === 403) {
           logout();
           navigate("/login");
           setIsSubmitting(false);

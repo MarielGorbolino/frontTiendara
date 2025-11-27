@@ -42,7 +42,7 @@ export default function AuthProvider({ children }) {
         body: JSON.stringify({ email, password }),
       });
 
-      if (response.status === 401) {
+      if (response.status === 403) {
         throw new Error("Usuario o contraseña incorrectos");
       }
 

@@ -20,7 +20,7 @@ export function useApi() {
 
       let res = await fetch(url, options);
 
-      if (res.status === 401 && retry === 0) {
+      if (res.status === 403 && retry === 0) {
         const refreshed = await refreshAccessToken();
 
         if (refreshed?.success) {

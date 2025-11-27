@@ -81,7 +81,7 @@ function CartProvider({ children }) {
           });
         }
 
-        if (response.status === 401 && retryCount === 0) {
+        if (response.status === 403 && retryCount === 0) {
           const refreshResult = await refreshAccessToken();
           if (refreshResult?.success) {
             return peticionesCart(

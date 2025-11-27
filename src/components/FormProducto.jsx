@@ -146,7 +146,7 @@ function FormProducto() {
     try {
       let respuesta = await requestCreateProduct(productData, accessToken);
 
-      if (respuesta.status === 401) {
+      if (respuesta.status === 403) {
         const refreshResult = await refreshAccessToken();
 
         if (refreshResult && refreshResult.accessToken) {
@@ -155,7 +155,7 @@ function FormProducto() {
             refreshResult.accessToken
           );
 
-          if (respuesta.status === 401) {
+          if (respuesta.status === 403) {
             Swal.fire({
               icon: "error",
               text: "Sesión expirada, por favor inicia sesión nuevamente",
