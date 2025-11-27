@@ -8,7 +8,7 @@ const tabs =[
         icon:PlusCircle
     },{
         id:2,
-        label:"Lista de Product",
+        label:"Lista de Productos",
         icon:ShoppingBasket
     },
     {

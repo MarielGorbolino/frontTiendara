@@ -104,14 +104,8 @@ function Perfil() {
   }
   function handleChange(e) {
     const { name, value } = e.target;
-
-    // Actualizo form
     setForm((prev) => ({ ...prev, [name]: value }));
-
-    // Valido
     const error = validateField(name, value);
-
-    // Actualizo errores
     setErrors((prev) => ({ ...prev, [name]: error }));
   }
 
@@ -244,6 +238,7 @@ function Perfil() {
           <div className="flex gap-2 mt-6">
             <button
               type="submit"
+              onClick={handleSubmit}
               disabled={hasErrors()}
               className={`flex-1 py-2 rounded flex items-center justify-center gap-2
       ${

@@ -6,7 +6,6 @@ const PRODUCT_PRICE = 15000;
 const PORCENTAJE = 0.25;
 
 function ProductCard({ product, isCategoryPage }) {
-  console.log(isCategoryPage);
   const { user } = useAuth();
 
   const { updateProductCart } = useCart();

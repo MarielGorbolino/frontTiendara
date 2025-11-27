@@ -10,15 +10,15 @@ function SmartBackButton({ fallback = "/" }) {
     else navigate(fallback);
   };
 
-  return ( <></>
-  //   <button
-  //     onClick={handleClick}
-  //     className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md"
-  //   >
-  //     <ArrowLeft size={18} />
-  //     Volver
-  //   </button>
-   );
+  return (
+    <button
+      onClick={handleClick}
+      className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md"
+    >
+      <ArrowLeft size={18} />
+      Volver
+    </button>
+  );
 }
 
 export default SmartBackButton;

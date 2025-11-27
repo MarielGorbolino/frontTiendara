@@ -4,6 +4,7 @@ import { CartContext } from "../hooks/CartContext";
 import { useAuth } from "../hooks/useAuth";
 import useProducts from "../hooks/useProducts";
 import Loading from "../components/Loading";
+import SmartBackButton from "../components/SmartBackButton";
 
 const PRODUCT_PRICE = 15000;
 const PORCENTAJE = 0.25;
@@ -29,6 +30,7 @@ function ProductDetail() {
 
   return (
     <div className="bg-gray-700 min-h-screen pt-30 px-4 pb-12">
+      <SmartBackButton />
       <div className="text-white text-center mb-8 max-w-5xl mx-auto px-4">
         <h1 className="text-4xl font-bold break-words whitespace-normal">
           {product.title}
