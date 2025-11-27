@@ -35,13 +35,11 @@ export default function useProducts() {
       await fetchProducts();
       Swal.fire({
         icon: "success",
-        title: "success",
         text: "Producto eliminado correctamente",
       });
     } catch (e) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al eliminar producto" + e.message,
       });
     }
@@ -53,13 +51,11 @@ export default function useProducts() {
       await fetchProducts();
       Swal.fire({
         icon: "success",
-        title: "success",
         text: "Producto actualizado correctamente",
       });
     } catch (e) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al actualizar producto" + e.message,
       });
     }
@@ -69,10 +65,10 @@ export default function useProducts() {
     try {
       const res = await request(`/api/products/category/${category}`);
       setProducts(res.data);
+      return res.data;
     } catch (e) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al obtener los productos",
       });
     }
@@ -87,7 +83,6 @@ export default function useProducts() {
     } catch (e) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al obtener los productos",
       });
     }

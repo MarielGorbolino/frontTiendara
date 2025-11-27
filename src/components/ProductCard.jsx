@@ -5,7 +5,8 @@ import { useAuth } from "../hooks/useAuth";
 const PRODUCT_PRICE = 15000;
 const PORCENTAJE = 0.25;
 
-function ProductCard({ product }) {
+function ProductCard({ product, isCategoryPage }) {
+  console.log(isCategoryPage);
   const { user } = useAuth();
 
   const { updateProductCart } = useCart();
@@ -18,7 +19,7 @@ function ProductCard({ product }) {
   return (
     <div className="bg-gray-900 rounded-lg p-4">
       <Link to={"/product/" + (product._id || product.id)}>
-        <h2 className="text-xl font-semibold line-clamp-1 mb-5">
+        <h2 className="text-2xl md:text-3xl font-extrabold line-clamp-1 mb-4 text-white">
           {product.title}
         </h2>
         <div className="relative w-full">
@@ -28,21 +29,36 @@ function ProductCard({ product }) {
             alt={product.title}
           />
         </div>
-        <p className="text-gray-300 text-justify py-2">{`Precio: $${product.price.toLocaleString(
-          "es-AR"
-        )}`}</p>
+        <div className="mt-4 mb-2">
+          <p className="bg-gray-800/30 text-black-400 text-lg font-bold py-1 px-2 rounded inline-block mb-2">
+            Precio: ${product.price.toLocaleString("es-AR")}
+          </p>
+        </div>
+        <div>
+          {!isCategoryPage && (
+            <p className="bg-gray-800/30 text-black-400 text-md font-semibold py-1 px-2 rounded inline-block mb-2">
+              Categoría: {product.category.name}
+            </p>
+          )}
+        </div>
+
         <p
-          className={`mb-2 ${
-            product.stock > 0 ? "text-gray-300" : "text-red-500 font-bold"
-          }`}
+          className={`${
+            product.stock > 0
+              ? "bg-green-900/30 text-green-300"
+              : "bg-red-900/30 text-red-500 font-bold"
+          } text-md font-semibold py-1 px-2 rounded inline-block mb-2`}
         >
-          Stock: {product.stock > 0 ? product.stock : "AGOTADO"}
+           {product.stock > 0 ? `${product.stock == 1 ? `Queda solo una unidad disponible`: `Quedan ${product.stock} disponibles` }` : "AGOTADO"} 
         </p>
-        <p>{`Envio: ${
-          product.price > PRODUCT_PRICE
-            ? "GRATIS"
-            : "$" + (product.price * PORCENTAJE).toLocaleString("es-AR")
-        }`}</p>
+        <div>
+          <p className="bg-gray-800/30 text-black-400 text-md font-semibold py-1 px-2 rounded inline-block mb-2">
+            Envío:{" "}
+            {product.price > PRODUCT_PRICE
+              ? "GRATIS"
+              : "$" + (product.price * PORCENTAJE).toLocaleString("es-AR")}
+          </p>
+        </div>
       </Link>
       <div className="flex justify-end mt-3">
         <button

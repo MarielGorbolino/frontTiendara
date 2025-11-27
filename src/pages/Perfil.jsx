@@ -5,15 +5,21 @@ import Swal from "sweetalert2";
 import { useApi } from "../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
+import Loading from "../components/Loading";
 
 function Perfil() {
-  const { logout } = useAuth();
   const { request } = useApi();
   const navigate = useNavigate();
-  const { accessToken, refreshToken, refreshAccessToken } = useAuth();
+  const { logout, isLoading } = useAuth();
+  const [form, setForm] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    birthdate: "",
+  });
+  const [errors, setErrors] = useState({});
 
   const [user, setUser] = useState();
-  const [form, setForm] = useState({});
   const [loading, setLoading] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
@@ -25,40 +31,88 @@ function Perfil() {
   }
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (!isLoading) {
+      fetchUser();
+    }
+  }, [isLoading]);
+
+  function validateField(name, value) {
+    let error = "";
+
+    if (name === "name") {
+      if (!value.trim()) error = "El nombre es obligatorio";
+      else if (value.length < 3) error = "Mínimo 3 letras";
+    }
+
+    if (name === "lastName") {
+      if (!value.trim()) error = "El apellido es obligatorio";
+      else if (value.length < 3) error = "Mínimo 3 letras";
+    }
+
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) error = "Email inválido";
+    }
+
+    if (name === "birthdate") {
+      if (!value) {
+        error = "La fecha de nacimiento es obligatoria";
+      } else {
+        const fecha = new Date(value);
+        const hoy = new Date();
+
+        if (isNaN(fecha.getTime())) {
+          error = "Fecha inválida";
+        } else if (fecha > hoy) {
+          error = "La fecha no puede ser futura";
+        } else {
+          const edad = hoy.getFullYear() - fecha.getFullYear();
+          const mes = hoy.getMonth() - fecha.getMonth();
+          const dia = hoy.getDate() - fecha.getDate();
+          const edadReal = mes < 0 || (mes === 0 && dia < 0) ? edad - 1 : edad;
+
+          if (edadReal < 13) {
+            error = "Debes tener al menos 13 años";
+          } else if (edadReal > 120) {
+            error = "Fecha inválida";
+          }
+        }
+      }
+    }
+
+    return error;
+  }
 
   async function fetchUser() {
     try {
-      if (accessToken || refreshToken) {
-        const response = await request(`/api/user`);
-        setUser(response.data);
-        setForm({
-          name: response.data.name || "",
-          lastName: response.data.lastName || "",
-          email: response.data.email || "",
-          birthdate: response.data.birthdate
-            ? response.data.birthdate.split("T")[0]
-            : "",
-          role: response.data.role || "",
-        });
+      setLoading(true);
+      const response = await request(`/api/user`);
+      const userData = response.data;
 
-        setLoading(false);
-      } else {
-        await refreshAccessToken();
-      }
-    } catch (e) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "No se pudo cargar la información del usuario",
+      setUser(userData);
+      setForm({
+        name: userData.name || "",
+        lastName: userData.lastName || "",
+        email: userData.email || "",
+        birthdate: userData.birthdate ? userData.birthdate.split("T")[0] : "",
+        role: userData.role || "",
       });
+      setLoading(false);
+    } catch (error) {
       setLoading(false);
     }
   }
-
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Actualizo form
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Valido
+    const error = validateField(name, value);
+
+    // Actualizo errores
+    setErrors((prev) => ({ ...prev, [name]: error }));
   }
 
   async function handleSubmit(e) {
@@ -74,7 +128,6 @@ function Perfil() {
         icon: "success",
         title: "Perfil actualizado",
         text: "Los cambios se guardaron correctamente",
-        timer: 2000,
       });
     } catch (error) {
       Swal.fire({
@@ -92,22 +145,23 @@ function Perfil() {
 
   const handleCancelar = () => {
     setForm(original);
+    setErrors({});
     setEditMode(false);
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-white text-2xl">
-        Cargando perfil...
-      </div>
-    );
+  function hasErrors() {
+    if (
+      !form.name.trim() ||
+      !form.lastName.trim() ||
+      !form.email.trim() ||
+      !form.birthdate
+    )
+      return true;
+
+    return Object.values(errors).some((err) => err && err.length > 0);
   }
-  if (loading || !user) {
-    return (
-      <div className="flex justify-center items-center h-screen text-white text-2xl">
-        Cargando perfil...
-      </div>
-    );
+  if (isLoading || loading) {
+    return <Loading />;
   }
 
   return (
@@ -132,6 +186,7 @@ function Perfil() {
               onChangeFn={handleChange}
               name="name"
               disabled={!editMode}
+              error={errors.name}
             />
 
             <FormInput
@@ -141,6 +196,7 @@ function Perfil() {
               onChangeFn={handleChange}
               name="lastName"
               disabled={!editMode}
+              error={errors.lastName}
             />
 
             <FormInput
@@ -150,6 +206,7 @@ function Perfil() {
               onChangeFn={handleChange}
               name="email"
               disabled={!editMode}
+              error={errors.email}
             />
 
             <FormInput
@@ -159,6 +216,7 @@ function Perfil() {
               onChangeFn={handleChange}
               name="birthdate"
               disabled={!editMode}
+              error={errors.birthdate}
             />
           </div>
 
@@ -185,8 +243,14 @@ function Perfil() {
         ) : (
           <div className="flex gap-2 mt-6">
             <button
-              onClick={handleSubmit}
-              className="flex-1 bg-green-600 py-2 rounded hover:bg-green-700 flex items-center justify-center gap-2"
+              type="submit"
+              disabled={hasErrors()}
+              className={`flex-1 py-2 rounded flex items-center justify-center gap-2
+      ${
+        hasErrors()
+          ? "bg-gray-500 cursor-not-allowed"
+          : "bg-emerald-700 hover:bg-emerald-600"
+      }`}
             >
               <Save size={20} />
               Guardar

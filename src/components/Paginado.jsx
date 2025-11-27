@@ -1,3 +1,5 @@
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
 function Paginado({ page, totalPages, setPage } ) {
   return (<div className="flex justify-center items-center gap-4 mt-10">
             <button
@@ -5,7 +7,7 @@ function Paginado({ page, totalPages, setPage } ) {
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             >
-              ⬅ Anterior
+             <ArrowLeft size={18} />
             </button>
 
             <span className="text-white text-lg">
@@ -17,7 +19,7 @@ function Paginado({ page, totalPages, setPage } ) {
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
             >
-              Siguiente ➡
+             <ArrowRight size={18} />
             </button>
           </div>);
 }

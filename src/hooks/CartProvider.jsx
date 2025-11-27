@@ -39,7 +39,6 @@ function CartProvider({ children }) {
       setError(error);
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al obtener el intento de pago",
       });
     }
@@ -57,8 +56,6 @@ function CartProvider({ children }) {
         Swal.fire({
           icon: "info",
           text: "Debes iniciar sesión",
-          background: "#b0aeae",
-          confirmButtonColor: "#10b981",
         });
         return;
       }
@@ -81,8 +78,6 @@ function CartProvider({ children }) {
           Swal.fire({
             icon: "info",
             text: "No hay stock suficiente para agregar el producto al carrito",
-            background: "#b0aeae",
-            confirmButtonColor: "#10b981",
           });
         }
 
@@ -150,10 +145,9 @@ function CartProvider({ children }) {
       { idProducto },
       idProducto
     );
-    if (response.ok && message) {
+    if (response?.ok && message) {
       Swal.fire({
         icon: "success",
-        title: "success",
         text: "Producto agregado al carrito correctamente",
       });
     }

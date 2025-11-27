@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { CartContext } from "../hooks/CartContext";
 import { useAuth } from "../hooks/useAuth";
 import useProducts from "../hooks/useProducts";
+import Loading from "../components/Loading";
 
 const PRODUCT_PRICE = 15000;
 const PORCENTAJE = 0.25;
@@ -15,7 +16,7 @@ function ProductDetail() {
   const [mainImage, setMainImage] = useState(product?.images?.[0] || []);
 
   useEffect(() => {
-      fetchProduct(id);
+    fetchProduct(id);
   }, [id]);
 
   useEffect(() => {
@@ -24,22 +25,16 @@ function ProductDetail() {
     }
   }, [product]);
 
-  if (isLoading || !product || !product._id) {
-    return (
-     <div className="min-h-screen bg-gray-700 text-white pt-16 flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-400 mx-auto mb-4"></div>
-        <p className="text-blue-400 text-xl">Cargando...</p>
-      </div>
-    </div>
-    );
-  }
+  if (isLoading || !product || !product._id) return <Loading />;
 
   return (
     <div className="bg-gray-700 min-h-screen pt-30 px-4 pb-12">
-      <div className="text-white text-center mb-8">
-        <h1 className="text-4xl font-bold">{product.title}</h1>
+      <div className="text-white text-center mb-8 max-w-5xl mx-auto px-4">
+        <h1 className="text-4xl font-bold break-words whitespace-normal">
+          {product.title}
+        </h1>
       </div>
+
       <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg flex flex-col md:flex-row gap-6">
         <img
           src={mainImage}
@@ -103,18 +98,20 @@ function ProductDetail() {
             }
             className={`px-4 py-2 rounded ${
               !user?.id || product.stock === 0
-                ? "bg-gray-500 cursor-not-allowed" : "bg-emerald-700 hover:bg-emerald-600"
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-emerald-700 hover:bg-emerald-600"
             }`}
           >
             Agregar al carrito
           </button>
         </div>
       </div>
-        <div className="max-w-5xl mx-auto mt-8 bg-gray-800 p-6 rounded-lg text-center">
-    <p className="text-gray-300 text-lg">
-      {product.description || "Sin descripción disponible"}
-    </p>
-  </div>
+      <div className="max-w-5xl mx-auto mt-8 bg-gray-800 p-6 rounded-lg text-center">
+        <p className="text-gray-300 text-lg break-words whitespace-normal">
+          {product.description || "Sin descripción disponible"}
+        </p>
+      </div>
+
       {product.images && product.images.length > 1 && (
         <div className="max-w-5xl mx-auto mt-12">
           <h2 className="text-white text-2xl font-semibold mb-4 text-center">

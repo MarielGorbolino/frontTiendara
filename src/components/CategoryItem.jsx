@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 function CategoryItem({ category }) {
   return (
-    <div className="overflow-hidden h-96 w-full rounded-2xl group relative">
+    <div className="overflow-hidden h-80 w-full rounded-2xl group relative">
       <Link to={"/category/" + (category.name).replace(" ","")}>
         <div className="w-full h-full cursor-pointer">
           <div className="absolute inset-0 bg-linear-to-b from-transparent to-gray-900 opacity-50 z-10">

@@ -32,7 +32,6 @@ function Register() {
 
     setErrors((prev) => ({ ...prev, [name]: error }));
   }
-
   function validateField(name, value) {
     let error = "";
 
@@ -58,6 +57,32 @@ function Register() {
     if (name === "confirmarContrasenia") {
       if (value !== formData.contrasenia)
         error = "Las contraseñas no coinciden";
+    }
+
+    if (name === "fechaNacimiento") {
+      if (!value) {
+        error = "La fecha de nacimiento es obligatoria";
+      } else {
+        const fecha = new Date(value);
+        const hoy = new Date();
+
+        if (isNaN(fecha.getTime())) {
+          error = "Fecha inválida";
+        } else if (fecha > hoy) {
+          error = "La fecha no puede ser futura";
+        } else {
+          const edad = hoy.getFullYear() - fecha.getFullYear();
+          const mes = hoy.getMonth() - fecha.getMonth();
+          const dia = hoy.getDate() - fecha.getDate();
+          const edadReal = mes < 0 || (mes === 0 && dia < 0) ? edad - 1 : edad;
+
+          if (edadReal < 13) {
+            error = "Debes tener al menos 13 años";
+          } else if (edadReal > 120) {
+            error = "Fecha inválida";
+          }
+        }
+      }
     }
 
     return error;
@@ -112,13 +137,11 @@ function Register() {
         icon: "success",
         title: "Usuario registrado",
         text: "Usuario registrado correctamente",
-        confirmButtonColor: "#10b981",
       });
       navigate("/login");
     } else {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al registrar el usuario",
       });
     }
@@ -178,7 +201,7 @@ function Register() {
 
           <FormInput
             icon={<User size={18} />}
-            labelText="Confirmar Contraseña"
+            labelText="Confirmar contraseña"
             inputType="password"
             name="confirmarContrasenia"
             placeholder="admin123"

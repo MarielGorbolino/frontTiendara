@@ -29,7 +29,6 @@ export function useApi() {
 
         Swal.fire({
           icon: "error",
-          title: "Error",
           text: "Sesión expirada",
         });
         return null;
@@ -38,7 +37,6 @@ export function useApi() {
       if (!res.ok) {
         Swal.fire({
           icon: "error",
-          title: "Error",
           text: `Error: ${method} ${url}`,
         });
         return null;
@@ -48,7 +46,6 @@ export function useApi() {
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: `Error  de conexión: ${error.message}`,
       });
       return null;

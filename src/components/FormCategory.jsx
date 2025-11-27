@@ -126,7 +126,6 @@ function FormCategory() {
 
       Swal.fire({
         icon: "success",
-        title: "Success",
         text: "Categoría guardada correctamente",
       });
     } catch (error) {
@@ -139,7 +138,6 @@ function FormCategory() {
 
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al crear categoría",
       });
     }

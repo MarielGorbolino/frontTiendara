@@ -120,7 +120,6 @@ function FormProducto() {
     ) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Por favor completa todos los campos requeridos",
       });
       setIsSubmitting(false);
@@ -151,7 +150,6 @@ function FormProducto() {
           if (respuesta.status === 401) {
             Swal.fire({
               icon: "error",
-              title: "Error",
               text: "Sesión expirada, por favor inicia sesión nuevamente",
             });
             logout();
@@ -162,7 +160,6 @@ function FormProducto() {
         } else {
           Swal.fire({
             icon: "error",
-            title: "Error",
             text: "No se pudo refrescar el token",
           });
           logout();
@@ -182,7 +179,6 @@ function FormProducto() {
         icon: "success",
         title: "Producto creado",
         text: "Producto creado correctamente",
-        confirmButtonColor: "#10b981",
       });
 
       setFormData({
@@ -197,7 +193,6 @@ function FormProducto() {
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Error",
         text: "Error al crear el producto",
       });
     }
