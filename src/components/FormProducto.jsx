@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import FormInput from "./FormInput";
 import { useState } from "react";
-import { PencilLine, DollarSign, ImageUp } from "lucide-react";
+import {
+  PencilLine,
+  DollarSign,
+  ImageUp,
+  ChartBarStacked,
+  Package2Icon,
+} from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import useCategories from "../hooks/useCategories";
 import Swal from "sweetalert2";
@@ -64,32 +70,34 @@ function FormProducto() {
     navigate(-1);
   }
 
- async function handleImageChange(e) {
-  const files = Array.from(e.target.files);
-  if (!files.length) return;
+  async function handleImageChange(e) {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
 
-  const maxSizeMB = 1;
-  const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const maxSizeMB = 1;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-  const base64Images = [];
+    const base64Images = [];
 
-  for (const file of files) {
-    if (file.size > maxSizeBytes) {
-      alert(`La imagen ${file.name} supera el tamaño máximo de ${maxSizeMB} MB`);
-      continue;
+    for (const file of files) {
+      if (file.size > maxSizeBytes) {
+        alert(
+          `La imagen ${file.name} supera el tamaño máximo de ${maxSizeMB} MB`
+        );
+        continue;
+      }
+
+      const base64 = await fileToBase64(file);
+      base64Images.push(base64);
     }
 
-    const base64 = await fileToBase64(file);
-    base64Images.push(base64);
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...base64Images],
+    }));
+
+    e.target.value = null;
   }
-
-  setFormData((prev) => ({
-    ...prev,
-    images: [...prev.images, ...base64Images],
-  }));
-
-  e.target.value = null;
-}
 
   function fileToBase64(file) {
     return new Promise((resolve) => {
@@ -137,10 +145,10 @@ function FormProducto() {
     const productData = {
       title: formData.title,
       description: formData.description,
-      price: parseFloat(formData.price),
+      price: formData.price,
       category: formData.category,
       stock: parseInt(formData.stock) || 0,
-      images: formData.images
+      images: formData.images,
     };
 
     try {
@@ -209,15 +217,18 @@ function FormProducto() {
   }
 
   function hasErrors() {
-     const errorEmpty =
+    const errorEmpty =
       !formData.title ||
       !formData.description ||
       !formData.price ||
       !formData.category ||
       !formData.stock ||
-      formData.images?.length == 0
-      
-    return errorEmpty || errors && Object.values(errors).some((err) => err && err.length > 0);
+      formData.images?.length == 0;
+
+    return (
+      errorEmpty ||
+      (errors && Object.values(errors).some((err) => err && err.length > 0))
+    );
   }
 
   return (
@@ -257,17 +268,18 @@ function FormProducto() {
         icon={<DollarSign size={18} />}
         labelText={"Precio *"}
         inputType={"number"}
-        placeholder={"19.99"}
+        placeholder={"1999"}
         value={formData.price}
         onChangeFn={(e) => {
           setFormData({ ...formData, price: e.target.value });
           validateField("price", e.target.value);
         }}
         error={errors.price}
+        span={"Usá coma (,) o punto (.) para decimales"}
       />
 
       <FormInput
-        icon={<DollarSign size={18} />}
+        icon={<Package2Icon size={18} />}
         labelText={"Cantidad en Stock *"}
         inputType={"number"}
         placeholder={"2"}
@@ -312,7 +324,7 @@ function FormProducto() {
 
       <div className="flex flex-col text-gray-300 w-full">
         <div className="flex flex-row justify-start items-center gap-2 mb-2">
-          <DollarSign size={18} />
+          <ChartBarStacked size={18} />
           <label className="text-sm font-medium">{"Categoria *"}</label>
         </div>
 
