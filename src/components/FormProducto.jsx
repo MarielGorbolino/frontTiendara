@@ -30,8 +30,16 @@ function FormProducto() {
       errorMsg = "El título debe tener al menos 3 caracteres";
     }
 
+    if (name === "title" && value !== "" && value.trim().length > 100) {
+      errorMsg = "La titulo debe tener menos de 100 caracteres";
+    }
+
     if (name === "description" && value !== "" && value.trim().length < 5) {
       errorMsg = "La descripción debe tener al menos 5 caracteres";
+    }
+
+    if (name === "description" && value !== "" && value.trim().length > 500) {
+      errorMsg = "La descripción debe tener menos de 500 caracteres";
     }
 
     if (name === "price" && (value === "" || Number(value) <= 0)) {

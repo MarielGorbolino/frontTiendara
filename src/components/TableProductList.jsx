@@ -28,8 +28,16 @@ function TableProductList() {
       error = "El título debe tener al menos 3 caracteres";
     }
 
+    if (name === "title" && value !== "" && value.trim().length > 100) {
+      error = "La titulo debe tener menos de 100 caracteres";
+    }
+
     if (name === "description" && value !== "" && value.trim().length < 5) {
       error = "La descripción debe tener al menos 5 caracteres";
+    }
+
+    if (name === "description" && value !== "" && value.trim().length > 500) {
+      error = "La descripción debe tener menos de 500 caracteres";
     }
 
     if (name === "price" && (value === "" || Number(value) <= 0)) {
@@ -169,11 +177,11 @@ function TableProductList() {
                         if (!hasErrors()) {
                           updateParcialProduct(editingId, editValues);
                           setEditingId(null);
-                        }else{
-                           Swal.fire({
-                                    icon: "error",
-                                    text: `Por favor corrija los errores antes de guardar`,
-                                  });
+                        } else {
+                          Swal.fire({
+                            icon: "error",
+                            text: `Por favor corrija los errores antes de guardar`,
+                          });
                         }
                       }}
                     >

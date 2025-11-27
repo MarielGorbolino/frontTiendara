@@ -38,10 +38,10 @@ export default function useProducts() {
         text: "Producto eliminado correctamente",
       });
     } catch (e) {
-      Swal.fire({
-        icon: "error",
-        text: "Error al eliminar producto" + e.message,
-      });
+      // Swal.fire({
+      //   icon: "error",
+      //   text: "Error al eliminar producto" + e.message,
+      // });
     }
   };
 

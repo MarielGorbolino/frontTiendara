@@ -30,8 +30,16 @@ function FormCategory() {
       errorMsg = "El título debe tener al menos 3 caracteres";
     }
 
+    if (name === "name" && value !== "" && value.trim().length > 100) {
+      errorMsg = "El título debe tener menos de 100 caracteres";
+    }
+
     if (name === "description" && value !== "" && value.trim().length < 5) {
       errorMsg = "La descripción debe tener al menos 5 caracteres";
+    }
+
+    if (name === "description" && value !== "" && value.trim().length > 300) {
+      errorMsg = "La descripción debe tener menos de 300 caracteres";
     }
 
     setErrors((prev) => ({ ...prev, [name]: errorMsg }));
@@ -144,14 +152,14 @@ function FormCategory() {
   }
 
   function hasErrors() {
-     const errorEmpty =
-      !formData.name ||
-      !formData.description ||
-      formData.image?.length == 0
-      
-    return errorEmpty || errors && Object.values(errors).some((err) => err && err.length > 0);
-  }
+    const errorEmpty =
+      !formData.name || !formData.description || formData.image?.length == 0;
 
+    return (
+      errorEmpty ||
+      (errors && Object.values(errors).some((err) => err && err.length > 0))
+    );
+  }
 
   return (
     <form
@@ -210,15 +218,15 @@ function FormCategory() {
 
         <button
           type="submit"
-          disabled={isSubmitting  || hasErrors()}
+          disabled={isSubmitting || hasErrors()}
           className={`px-6 py-3 rounded-md flex items-center justify-center flex-1 text-center text-white
             ${
-              isSubmitting  || hasErrors()
+              isSubmitting || hasErrors()
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-emerald-700 hover:bg-emerald-600"
             }`}
         >
-           {isSubmitting ? "Guardando..." : "Guardar"}
+          {isSubmitting ? "Guardando..." : "Guardar"}
         </button>
       </div>
     </form>

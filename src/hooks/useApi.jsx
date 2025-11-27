@@ -35,10 +35,10 @@ export function useApi() {
       }
 
       if (!res.ok) {
-        Swal.fire({
-          icon: "error",
-          text: `Error: ${method} ${url}`,
-        });
+        // Swal.fire({
+        //   icon: "error",
+        //   text: `Error: ${method} ${url}`,
+        // });
         return null;
       }
 
