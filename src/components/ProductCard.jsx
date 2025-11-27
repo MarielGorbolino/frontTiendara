@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useCart from "../hooks/useCart";
 import { useAuth } from "../hooks/useAuth";
@@ -7,12 +7,15 @@ const PORCENTAJE = 0.25;
 
 function ProductCard({ product, isCategoryPage }) {
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const { updateProductCart } = useCart();
   useEffect(() => {}, []);
 
   function addtocart() {
+    setLoading(true);
     updateProductCart(product._id);
+    setLoading(false);
   }
 
   return (
@@ -48,7 +51,13 @@ function ProductCard({ product, isCategoryPage }) {
               : "bg-red-900/30 text-red-500 font-bold"
           } text-md font-semibold py-1 px-2 rounded inline-block mb-2`}
         >
-           {product.stock > 0 ? `${product.stock == 1 ? `Queda solo una unidad disponible`: `Quedan ${product.stock} disponibles` }` : "AGOTADO"} 
+          {product.stock > 0
+            ? `${
+                product.stock == 1
+                  ? `Queda solo una unidad disponible`
+                  : `Quedan ${product.stock} disponibles`
+              }`
+            : "AGOTADO"}
         </p>
         <div>
           <p className="bg-gray-800/30 text-black-400 text-md font-semibold py-1 px-2 rounded inline-block mb-2">
@@ -62,10 +71,10 @@ function ProductCard({ product, isCategoryPage }) {
       <div className="flex justify-end mt-3">
         <button
           onClick={addtocart}
-          disabled={!user?.id || product.stock === 0}
+          disabled={!user?.id || product.stock === 0 || loading}
           title={!user?.id ? "Debes iniciar sesión para agregar productos" : ""}
           className={`px-4 py-2 rounded ${
-            user?.id && product.stock > 0
+            user?.id && product.stock > 0 && !loading
               ? "bg-emerald-700 hover:bg-emerald-600"
               : "bg-gray-500 cursor-not-allowed"
           }`}

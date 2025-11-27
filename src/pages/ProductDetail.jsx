@@ -15,6 +15,7 @@ function ProductDetail() {
   const { user } = useAuth();
   const { fetchProduct, product, isLoading } = useProducts();
   const [mainImage, setMainImage] = useState(product?.images?.[0] || []);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchProduct(id);
@@ -92,14 +93,16 @@ function ProductDetail() {
           </p>
           <button
             onClick={async () => {
+              setLoading(true);
               await updateProductCart(product._id);
+              setLoading(false);
             }}
-            disabled={!user?.id || product.stock === 0}
+            disabled={!user?.id || product.stock === 0 || loading}
             title={
               !user?.id ? "Debes iniciar sesión para agregar productos" : ""
             }
             className={`px-4 py-2 rounded ${
-              !user?.id || product.stock === 0
+              !user?.id || product.stock === 0 || loading
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-emerald-700 hover:bg-emerald-600"
             }`}
